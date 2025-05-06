@@ -27,8 +27,32 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING
   },
   role: {
-    type: DataTypes.ENUM('user', 'admin'),
+    type: DataTypes.ENUM('user', 'admin', 'bride', 'groom', 'event_planner', 'planning_team', 'vendor', 'attendee'),
     defaultValue: 'user'
+  },
+  eventRole: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    description: 'Specific role in the event (e.g., "Mother of the Bride", "Best Man", "Bridesmaid")'
+  },
+  planningPermissions: {
+    type: DataTypes.ENUM('none', 'view', 'edit', 'full'),
+    defaultValue: 'none',
+    description: 'Access level for event planning features'
+  },
+  isVendor: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
+  vendorId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    description: 'Reference to vendor table if user is associated with vendor'
+  },
+  primaryEventId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    description: 'Primary event this user is associated with (e.g., which wedding)'
   },
   resetPasswordToken: {
     type: DataTypes.STRING
@@ -64,6 +88,22 @@ User.prototype.getSignedJwtToken = function() {
   return jwt.sign({ id: this.id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE
   });
+};
+
+// Check if user is part of event planning team
+User.prototype.isEventPlanner = function() {
+  return ['admin', 'bride', 'groom', 'event_planner', 'planning_team'].includes(this.role);
+};
+
+// Check if user has edit permissions for event planning
+User.prototype.canEditEvent = function() {
+  return ['admin', 'bride', 'groom', 'event_planner'].includes(this.role) || 
+         (this.role === 'planning_team' && ['edit', 'full'].includes(this.planningPermissions));
+};
+
+// Check if user is a primary stakeholder in the event
+User.prototype.isPrimaryStakeholder = function() {
+  return ['admin', 'bride', 'groom', 'event_planner'].includes(this.role);
 };
 
 module.exports = User;
