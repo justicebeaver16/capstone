@@ -33,12 +33,12 @@ const User = sequelize.define('User', {
   eventRole: {
     type: DataTypes.STRING,
     allowNull: true,
-    description: 'Specific role in the event (e.g., "Mother of the Bride", "Best Man", "Bridesmaid")'
+    comment: 'Specific role in the event (e.g., "Mother of the Bride", "Best Man", "Bridesmaid")'
   },
   planningPermissions: {
     type: DataTypes.ENUM('none', 'view', 'edit', 'full'),
     defaultValue: 'none',
-    description: 'Access level for event planning features'
+    comment: 'Access level for event planning features'
   },
   isVendor: {
     type: DataTypes.BOOLEAN,
@@ -47,12 +47,12 @@ const User = sequelize.define('User', {
   vendorId: {
     type: DataTypes.INTEGER,
     allowNull: true,
-    description: 'Reference to vendor table if user is associated with vendor'
+    comment: 'Reference to vendor table if user is associated with vendor'
   },
   primaryEventId: {
     type: DataTypes.INTEGER,
     allowNull: true,
-    description: 'Primary event this user is associated with (e.g., which wedding)'
+    comment: 'Primary event this user is associated with (e.g., which wedding)'
   },
   resetPasswordToken: {
     type: DataTypes.STRING
@@ -61,6 +61,7 @@ const User = sequelize.define('User', {
     type: DataTypes.DATE
   }
 }, {
+  schema: process.env.NODE_ENV === 'production' ? process.env.SCHEMA : undefined,
   timestamps: true,
   hooks: {
     beforeCreate: async (user) => {
@@ -97,7 +98,7 @@ User.prototype.isEventPlanner = function() {
 
 // Check if user has edit permissions for event planning
 User.prototype.canEditEvent = function() {
-  return ['admin', 'bride', 'groom', 'event_planner'].includes(this.role) || 
+  return ['admin', 'bride', 'groom', 'event_planner'].includes(this.role) ||
          (this.role === 'planning_team' && ['edit', 'full'].includes(this.planningPermissions));
 };
 

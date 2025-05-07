@@ -7,6 +7,7 @@ const OtherGuest = sequelize.define('OtherGuest', {
     allowNull: false
   }
 }, {
+  schema: process.env.NODE_ENV === 'production' ? process.env.SCHEMA : undefined,
   timestamps: false
 });
 

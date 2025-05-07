@@ -14,6 +14,7 @@ const VendorAttachment = sequelize.define('VendorAttachment', {
     type: DataTypes.STRING
   }
 }, {
+  schema: process.env.NODE_ENV === 'production' ? process.env.SCHEMA : undefined,
   timestamps: true
 });
 

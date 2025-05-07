@@ -23,6 +23,7 @@ const Member = sequelize.define('Member', {
     type: DataTypes.TEXT
   }
 }, {
+  schema: process.env.NODE_ENV === 'production' ? process.env.SCHEMA : undefined,
   timestamps: true
 });
 

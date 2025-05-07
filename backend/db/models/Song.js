@@ -25,6 +25,7 @@ const Song = sequelize.define('Song', {
     type: DataTypes.TEXT
   }
 }, {
+  schema: process.env.NODE_ENV === 'production' ? process.env.SCHEMA : undefined,
   timestamps: true
 });
 

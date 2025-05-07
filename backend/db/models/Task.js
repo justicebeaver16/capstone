@@ -20,6 +20,7 @@ const Task = sequelize.define('Task', {
     type: DataTypes.TEXT
   }
 }, {
+  schema: process.env.NODE_ENV === 'production' ? process.env.SCHEMA : undefined,
   timestamps: true
 });
 

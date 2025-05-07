@@ -20,6 +20,7 @@ const Photo = sequelize.define('Photo', {
     defaultValue: []
   }
 }, {
+  schema: process.env.NODE_ENV === 'production' ? process.env.SCHEMA : undefined,
   timestamps: true
 });
 

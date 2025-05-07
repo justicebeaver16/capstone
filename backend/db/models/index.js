@@ -8,26 +8,8 @@ const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../../config/database.js')[env];
 const db = {};
-const sequelize = require('../config/db');
-const User = require('./User');
-const Event = require('./Event');
-const Guest = require('./Guest');
-const Vendor = require('./Vendor');
-const VendorAttachment = require('./VendorAttachment');
-const MoodBoard = require('./MoodBoard');
-const MoodBoardItem = require('./MoodBoardItem');
-const SeatingChart = require('./SeatingChart');
-const Table = require('./Table');
-const Seat = require('./Seat');
-const EventParty = require('./EventParty');
-const Member = require('./Member');
-const Task = require('./Task');
-const Photo = require('./Photo');
-const Like = require('./Like');
-const Comment = require('./Comment');
-const Playlist = require('./Playlist');
-const Song = require('./Song');
 
+// Initialize sequelize instance
 let sequelize;
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
@@ -35,28 +17,46 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
-fs
-  .readdirSync(__dirname)
-  .filter(file => {
-    return (
-      file.indexOf('.') !== 0 &&
-      file !== basename &&
-      file.slice(-3) === '.js' &&
-      file.indexOf('.test.js') === -1
-    );
-  })
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
-  });
+// Import all models
+const User = require('./user');
+const Event = require('./Event');
+const Guest = require('./Guest');
+const Vendor = require('./Vendor');
+const VendorAttachment = require('./VendorAttachment');
+const MoodBoard = require('./MoodBoard');
+const MoodBoardItem = require('./MoodBoardItem');
+const Table = require('./Table');
+const Seat = require('./Seat');
+const EventParty = require('./EventParty');
+const Member = require('./Member');
+const Task = require('./Task');
+const Photo = require('./Photo');
+const Song = require('./Song');
 
+// Add models to db object
+db.User = User;
+db.Event = Event;
+db.Guest = Guest;
+db.Vendor = Vendor;
+db.VendorAttachment = VendorAttachment;
+db.MoodBoard = MoodBoard;
+db.MoodBoardItem = MoodBoardItem;
+db.Table = Table;
+db.Seat = Seat;
+db.EventParty = EventParty;
+db.Member = Member;
+db.Task = Task;
+db.Photo = Photo;
+db.Song = Song;
+
+// Call associate methods if they exist
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
 });
 
-// Define relationships
+// Define relationships if needed (not defined in model files)
 // User - Event Association
 User.hasMany(Event);
 Event.belongsTo(User);
@@ -82,12 +82,12 @@ MoodBoard.hasMany(MoodBoardItem);
 MoodBoardItem.belongsTo(MoodBoard);
 
 // Event - SeatingChart Association
-Event.hasOne(SeatingChart);
-SeatingChart.belongsTo(Event);
+// Event.hasOne(SeatingChart);
+// SeatingChart.belongsTo(Event);
 
 // SeatingChart - Table Association
-SeatingChart.hasMany(Table);
-Table.belongsTo(SeatingChart);
+// SeatingChart.hasMany(Table);
+// Table.belongsTo(SeatingChart);
 
 // Table - Seat Association
 Table.hasMany(Seat);
@@ -120,24 +120,24 @@ User.hasMany(Photo);
 Photo.belongsTo(User, { as: 'uploadedBy' });
 
 // Photo - Like Association
-Photo.hasMany(Like);
-Like.belongsTo(Photo);
-User.hasMany(Like);
-Like.belongsTo(User);
+// Photo.hasMany(Like);
+// Like.belongsTo(Photo);
+// User.hasMany(Like);
+// Like.belongsTo(User);
 
 // Photo - Comment Association
-Photo.hasMany(Comment);
-Comment.belongsTo(Photo);
-User.hasMany(Comment);
-Comment.belongsTo(User);
+// Photo.hasMany(Comment);
+// Comment.belongsTo(Photo);
+// User.hasMany(Comment);
+// Comment.belongsTo(User);
 
 // Event - Playlist Association
-Event.hasOne(Playlist);
-Playlist.belongsTo(Event);
+// Event.hasOne(Playlist);
+// Playlist.belongsTo(Event);
 
 // Playlist - Song Association
-Playlist.hasMany(Song);
-Song.belongsTo(Playlist);
+// Playlist.hasMany(Song);
+// Song.belongsTo(Playlist);
 
 // Song - User Association (optional)
 Song.belongsTo(User, { as: 'requestedBy', constraints: false });
@@ -166,21 +166,21 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 module.exports = {
-db,
-sequelize,
-syncDatabase,
-User,
-Event,
-Guest,
-Vendor,
-VendorAttachment,
-MoodBoard,
-MoodBoardItem,
-Table,
-Seat,
-EventParty,
-Member,
-Task,
-Photo,
-Song
+  db,
+  sequelize,
+  syncDatabase,
+  User,
+  Event,
+  Guest,
+  Vendor,
+  VendorAttachment,
+  MoodBoard,
+  MoodBoardItem,
+  Table,
+  Seat,
+  EventParty,
+  Member,
+  Task,
+  Photo,
+  Song
 };

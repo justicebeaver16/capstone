@@ -1,5 +1,10 @@
 const { Song } = require('../models');
 
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     // Avoid duplicates
@@ -267,6 +272,7 @@ module.exports = {
   },
   
   down: async (queryInterface, Sequelize) => {
+    options.tableName = 'Songs';
     // Remove all song data when reverting the seed
     await Song.destroy({ where: {} });
     console.log('Songs seed reverted');

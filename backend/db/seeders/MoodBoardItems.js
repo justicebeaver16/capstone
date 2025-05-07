@@ -1,6 +1,12 @@
 'use strict';
 
-/** @type {import('sequelize-cli').Migration} */
+const { MoodBoardItem } = require('../models');
+
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     const now = new Date();
@@ -336,11 +342,12 @@ module.exports = {
     }
 
     // Insert all items into the MoodBoardItems table
-    return queryInterface.bulkInsert('MoodBoardItems', moodBoardItems, {});
+    return queryInterface.bulkInsert('MoodBoardItems', moodBoardItems, options);
   },
 
   async down(queryInterface, Sequelize) {
+    options.tableName = 'MoodBoardItems';
     // Remove all entries when rolling back the seeder
-    return queryInterface.bulkDelete('MoodBoardItems', null, {});
+    return queryInterface.bulkDelete('MoodBoardItems', null, options);
   }
 };

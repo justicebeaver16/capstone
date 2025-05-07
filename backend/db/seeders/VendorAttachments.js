@@ -1,5 +1,12 @@
 'use strict';
 
+const { VendorAttachment } = require('../models');
+
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const vendorAttachments = [
@@ -475,11 +482,12 @@ module.exports = {
     ];
     
     // Insert vendor attachments
-    await queryInterface.bulkInsert('VendorAttachments', vendorAttachments, {});
+    await queryInterface.bulkInsert('VendorAttachments', vendorAttachments, options);
   },
 
   down: async (queryInterface, Sequelize) => {
+    options.tableName = 'VendorAttachments';
     // Delete the vendor attachments
-    await queryInterface.bulkDelete('VendorAttachments', null, {});
+    await queryInterface.bulkDelete('VendorAttachments', null, options);
   }
 };

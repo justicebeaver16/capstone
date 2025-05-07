@@ -23,6 +23,7 @@ const Table = sequelize.define('Table', {
     defaultValue: 0
   }
 }, {
+  schema: process.env.NODE_ENV === 'production' ? process.env.SCHEMA : undefined,
   timestamps: true
 });
 

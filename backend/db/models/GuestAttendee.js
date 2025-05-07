@@ -10,6 +10,7 @@ const GuestAttendee = sequelize.define('GuestAttendee', {
     type: DataTypes.STRING
   }
 }, {
+  schema: process.env.NODE_ENV === 'production' ? process.env.SCHEMA : undefined,
   timestamps: false
 });
 

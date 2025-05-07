@@ -52,6 +52,7 @@ const Guest = sequelize.define('Guest', {
     type: DataTypes.STRING
   }
 }, {
+  schema: process.env.NODE_ENV === 'production' ? process.env.SCHEMA : undefined,
   timestamps: true
 });
 

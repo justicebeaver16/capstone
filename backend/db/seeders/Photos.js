@@ -1,4 +1,11 @@
+'use strict';
+
 const { Photo } = require('../models');
+
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -248,6 +255,7 @@ module.exports = {
   },
   
   down: async (queryInterface, Sequelize) => {
+    options.tableName = 'Photos';
     // Remove all photo data when reverting the seed
     await Photo.destroy({ where: {} });
     console.log('Photos seed reverted');

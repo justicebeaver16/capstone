@@ -39,6 +39,7 @@ const Event = sequelize.define('Event', {
     defaultValue: 'planning'
   }
 }, {
+  schema: process.env.NODE_ENV === 'production' ? process.env.SCHEMA : undefined,
   timestamps: true
 });
 

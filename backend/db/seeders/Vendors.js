@@ -1,5 +1,12 @@
 'use strict';
 
+const { Vendor } = require('../models');
+
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const vendors = [
@@ -381,11 +388,12 @@ module.exports = {
     ];
 
     // Insert the vendors
-    await queryInterface.bulkInsert('Vendors', vendors, {});
+    await queryInterface.bulkInsert('Vendors', vendors, options);
   },
 
   down: async (queryInterface, Sequelize) => {
+    options.tableName = 'Vendors';
     // Delete the vendors
-    await queryInterface.bulkDelete('Vendors', null, {});
+    await queryInterface.bulkDelete('Vendors', null, options);
   }
 };

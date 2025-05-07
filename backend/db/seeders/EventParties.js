@@ -1,12 +1,17 @@
 'use strict';
 
-/** @type {import('sequelize-cli').Migration} */
+const { EventParty } = require('../models');
+
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
+
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    const now = new Date();
+  async up (queryInterface, Sequelize) {
+    await EventParty.bulkCreate([
     
     // Event party roles for wedding/event planning team
-    const eventParties = [
       // Miller-Johnson Wedding
       {
         EventId: 1, // Miller-Johnson Wedding Ceremony
@@ -180,14 +185,15 @@ module.exports = {
         createdAt: now,
         updatedAt: now
       }
-    ];
+    ]);
 
     // Insert all event parties into the EventParties table
-    return queryInterface.bulkInsert('EventParties', eventParties, {});
+    return queryInterface.bulkInsert('EventParties', eventParties, options);
   },
 
   async down(queryInterface, Sequelize) {
+    options.tableName = 'EventParties';
     // Remove all entries when rolling back the seeder
-    return queryInterface.bulkDelete('EventParties', null, {});
+    return queryInterface.bulkDelete('EventParties', null, options);
   }
 };

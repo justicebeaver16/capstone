@@ -14,6 +14,7 @@ const Seat = sequelize.define('Seat', {
     defaultValue: false
   }
 }, {
+  schema: process.env.NODE_ENV === 'production' ? process.env.SCHEMA : undefined,
   timestamps: true
 });
 

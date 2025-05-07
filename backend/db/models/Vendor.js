@@ -75,6 +75,7 @@ const Vendor = sequelize.define('Vendor', {
     defaultValue: []
   }
 }, {
+  schema: process.env.NODE_ENV === 'production' ? process.env.SCHEMA : undefined,
   timestamps: true
 });
 

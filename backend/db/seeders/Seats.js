@@ -1,4 +1,11 @@
+'use strict';
+
 const { Seat, Table } = require('../models');
+
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -203,6 +210,7 @@ module.exports = {
   },
   
   down: async (queryInterface, Sequelize) => {
+    options.tableName = 'Seats';
     // Remove all seat data when reverting the seed
     await Seat.destroy({ where: {} });
     console.log('Seats seed reverted');

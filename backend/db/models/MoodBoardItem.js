@@ -37,6 +37,7 @@ const MoodBoardItem = sequelize.define('MoodBoardItem', {
     defaultValue: 200
   }
 }, {
+  schema: process.env.NODE_ENV === 'production' ? process.env.SCHEMA : undefined,
   timestamps: true
 });
 

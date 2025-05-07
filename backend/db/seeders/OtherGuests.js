@@ -1,6 +1,12 @@
 'use strict';
 
-/** @type {import('sequelize-cli').Migration} */
+const { OtherGuest } = require('../models');
+
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     // All existing guests IDs
@@ -45,11 +51,12 @@ module.exports = {
     });
 
     // Insert all other guests into the OtherGuests table
-    return queryInterface.bulkInsert('OtherGuests', otherGuests, {});
+    return queryInterface.bulkInsert('OtherGuests', otherGuests, options);
   },
 
   async down(queryInterface, Sequelize) {
+    options.tableName = 'OtherGuests';
     // Remove all entries when rolling back the seeder
-    return queryInterface.bulkDelete('OtherGuests', null, {});
+    return queryInterface.bulkDelete('OtherGuests', null, options);
   }
 };
