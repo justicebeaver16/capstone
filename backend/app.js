@@ -122,23 +122,23 @@ app.get('/health', (req, res) => {
   res.status(200).send('OK');
 });
 
-// Use Render's PORT environment variable
-const PORT = process.env.PORT || 5000;
+// // Use Render's PORT environment variable
+// const PORT = process.env.PORT || 5000;
 
-// Database connection and server start
-sequelize.authenticate()
-  .then(() => {
-    console.log('Database connected successfully');
-    return sequelize.sync();
-  })
-  .then(() => {
-    app.listen(PORT, '0.0.0.0', () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-    process.exit(1);
-  });
+// // Database connection and server start
+// sequelize.authenticate()
+//   .then(() => {
+//     console.log('Database connected successfully');
+//     return sequelize.sync();
+//   })
+//   .then(() => {
+//     app.listen(PORT, '0.0.0.0', () => {
+//       console.log(`Server is running on port ${PORT}`);
+//     });
+//   })
+//   .catch(err => {
+//     console.error('Unable to connect to the database:', err);
+//     process.exit(1);
+//   });
 
   module.exports = app;
