@@ -2,8 +2,17 @@ const { Model, DataTypes } = require('sequelize');
 
 class EventParty extends Model {
   static associate(models) {
-    EventParty.belongsTo(models.Event, { foreignKey: 'EventId' });
-    EventParty.belongsTo(models.Vendor, { foreignKey: 'VendorId' });
+    EventParty.belongsTo(models.Event, {
+      foreignKey: 'EventId',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE'
+    });
+  
+    EventParty.belongsTo(models.Vendor, {
+      foreignKey: 'VendorId',
+      onDelete: 'SET NULL',
+      onUpdate: 'CASCADE'
+    });
   }
 }
 

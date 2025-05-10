@@ -2,8 +2,12 @@ const { Model, DataTypes } = require('sequelize');
 
 class Vendor extends Model {
   static associate(models) {
-    Vendor.belongsTo(models.Event);
-    Vendor.hasMany(models.EventParty);
+    Vendor.belongsTo(models.Event, {
+      foreignKey: 'EventId'
+    });
+    Vendor.hasMany(models.EventParty, {
+      foreignKey: 'VendorId'
+    });
     Vendor.hasMany(models.VendorAttachment);
   }
 }
