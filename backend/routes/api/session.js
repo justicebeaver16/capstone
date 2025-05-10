@@ -10,6 +10,16 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 const router = express.Router();
 
+const validateLogin = [
+  check('credential')
+    .exists({ checkFalsy: true })
+    .withMessage('Please provide a valid email or username.'),
+  check('password')
+    .exists({ checkFalsy: true })
+    .withMessage('Please provide a password.'),
+  handleValidationErrors
+];
+
 // Log in
 router.post(
     '/',
@@ -58,8 +68,9 @@ router.delete(
   );
 
   // Restore session user
-router.get(
+  router.get(
     '/',
+    restoreUser,
     (req, res) => {
       const { user } = req;
       if (user) {
@@ -68,10 +79,10 @@ router.get(
           email: user.email,
           username: user.username,
         };
-        return res.json({
-          user: safeUser
-        });
-      } else return res.json({ user: null });
+        return res.json({ user: safeUser });
+      } else {
+        return res.json({ user: null });
+      }
     }
   );
 
