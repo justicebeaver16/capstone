@@ -1,5 +1,5 @@
 const QRCode = require('qrcode');
-const { Guest, GuestAttendee, OtherGuest, Event } = require('../models');
+const { Guest, GuestAttendee, OtherGuest, Event } = require('../db/models');
 const emailService = require('../utils/email');
 
 // Get all guests for an event
