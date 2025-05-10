@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const guestlistController = require('../../controllers/guestlistController');
-const auth = require('../../middleware/auth');
+const auth = require('../../utils/auth');
 
 // @route   GET api/guestlist/:eventId
 // @desc    Get all guests for an event
