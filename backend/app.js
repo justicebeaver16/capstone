@@ -18,17 +18,17 @@ dotenv.config();
 
 
 // Route imports
-const authRoutes = require('./routes/authRoutes');
-const userRoutes = require('./routes/userRoutes');
-const eventRoutes = require('./routes/eventRoutes');
-const moodboardRoutes = require('./routes/moodboardRoutes');
-const vendorRoutes = require('./routes/vendorRoutes');
+// const authRoutes = require('./routes/authRoutes');
+// const userRoutes = require('./routes/userRoutes');
+// const eventRoutes = require('./routes/eventRoutes');
+// const moodboardRoutes = require('./routes/moodboardRoutes');
+// const vendorRoutes = require('./routes/vendorRoutes');
 const guestlistRoutes = require('./routes/guestlistRoutes');
-const seatingRoutes = require('./routes/seatingRoutes');
-const eventpartyRoutes = require('./routes/eventpartyRoutes');
-const scheduleRoutes = require('./routes/scheduleRoutes');
-const photoRoutes = require('./routes/photoRoutes');
-const playlistRoutes = require('./routes/playlistRoutes');
+// const seatingRoutes = require('./routes/seatingRoutes');
+// const eventpartyRoutes = require('./routes/eventpartyRoutes');
+// const scheduleRoutes = require('./routes/scheduleRoutes');
+// const photoRoutes = require('./routes/photoRoutes');
+// const playlistRoutes = require('./routes/playlistRoutes');
 
 // Initialize
 const isProduction = environment === 'production';
