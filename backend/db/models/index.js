@@ -1,186 +1,371 @@
 'use strict';
 
-const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
-const process = require('process');
-const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../../config/database.js')[env];
-const db = {};
+const { Sequelize, DataTypes } = require('sequelize');
+const config = require('../../config/database');
+const sequelize = new Sequelize(config[process.env.NODE_ENV || 'development']);
 
-// Initialize sequelize instance
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
+// Import models manually
+const User = require('./01-user')(sequelize);
+const Event = require('./02-Event')(sequelize);
+const EventParty = require('./03-EventParty')(sequelize);
+const Guest = require('./05-Guest')(sequelize);
+const GuestAttendee = require('./06-GuestAttendee')(sequelize);
+const OtherGuest = require('./07-OtherGuest')(sequelize);
+const Member = require('./04-Member')(sequelize);
+const Task = require('./10-Task')(sequelize);
+const MoodBoard = require('./13-MoodBoard')(sequelize);
+const MoodBoardItem = require('./14-MoodBoardItem')(sequelize);
+const Photo = require('./16-Photo')(sequelize);
+const Song = require('./15-Song')(sequelize);
+const Table = require('./08-Table')(sequelize);
+const Seat = require('./09-Seat')(sequelize);
+const Vendor = require('./11-Vendor')(sequelize);
+const VendorAttachment = require('./12-VendorAttachment')(sequelize);
 
-// Import all models
-const User = require('./user');
-const Event = require('./Event');
-const Guest = require('./Guest');
-const Vendor = require('./Vendor');
-const VendorAttachment = require('./VendorAttachment');
-const MoodBoard = require('./MoodBoard');
-const MoodBoardItem = require('./MoodBoardItem');
-const Table = require('./Table');
-const Seat = require('./Seat');
-const EventParty = require('./EventParty');
-const Member = require('./Member');
-const Task = require('./Task');
-const Photo = require('./Photo');
-const Song = require('./Song');
+// Associate models
+const models = {
+  sequelize,
+  Sequelize,
+  User,
+  Event,
+  EventParty,
+  Guest,
+  GuestAttendee,
+  OtherGuest,
+  Member,
+  MoodBoard,
+  MoodBoardItem,
+  Photo,
+  Seat,
+  Song,
+  Table,
+  Task,
+  Vendor,
+  VendorAttachment
+};
 
-// Add models to db object
-db.User = User;
-db.Event = Event;
-db.Guest = Guest;
-db.Vendor = Vendor;
-db.VendorAttachment = VendorAttachment;
-db.MoodBoard = MoodBoard;
-db.MoodBoardItem = MoodBoardItem;
-db.Table = Table;
-db.Seat = Seat;
-db.EventParty = EventParty;
-db.Member = Member;
-db.Task = Task;
-db.Photo = Photo;
-db.Song = Song;
-
-// Call associate methods if they exist
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
+Object.values(models).forEach(model => {
+  if (typeof model.associate === 'function') {
+    model.associate(models);
   }
 });
 
-// Define relationships if needed (not defined in model files)
-// User - Event Association
-User.hasMany(Event);
-Event.belongsTo(User);
+module.exports = models;
 
-// Event - Guest Association
-Event.hasMany(Guest);
-Guest.belongsTo(Event);
+// 'use strict';
 
-// Event - Vendor Association
-Event.hasMany(Vendor);
-Vendor.belongsTo(Event);
+// const path = require('path');
+// const { Sequelize, DataTypes } = require('sequelize');
+// const process = require('process');
+// const basename = path.basename(__filename);
+// const env = process.env.NODE_ENV || 'development';
+// const config = require('../../config/database.js')[env];
+// const db = {};
 
-// Vendor - VendorAttachment Association
-Vendor.hasMany(VendorAttachment);
-VendorAttachment.belongsTo(Vendor);
+// // Initialize sequelize instance
+// let sequelize;
+// if (config.use_env_variable) {
+//   sequelize = new Sequelize(process.env[config.use_env_variable], config);
+// } else {
+//   sequelize = new Sequelize(config);
+// }
 
-// Event - MoodBoard Association
-Event.hasMany(MoodBoard);
-MoodBoard.belongsTo(Event);
+// // Import models directly - they're already defined with sequelize
+// const User = require('./user')(sequelize, DataTypes);
+// const Event = require('./Event')(sequelize, DataTypes);
+// const Guest = require('./Guest')(sequelize, DataTypes);
+// const Vendor = require('./Vendor')(sequelize, DataTypes);
+// const VendorAttachment = require('./VendorAttachment')(sequelize, DataTypes);
+// const MoodBoard = require('./MoodBoard')(sequelize, DataTypes);
+// const MoodBoardItem = require('./MoodBoardItem')(sequelize, DataTypes);
+// const Table = require('./Table')(sequelize, DataTypes);
+// const Seat = require('./Seat')(sequelize, DataTypes);
+// const EventParty = require('./EventParty')(sequelize, DataTypes);
+// const Member = require('./Member')(sequelize, DataTypes);
+// const Task = require('./Task')(sequelize, DataTypes);
+// const Photo = require('./Photo')(sequelize, DataTypes);
+// const Song = require('./Song')(sequelize, DataTypes);
 
-// MoodBoard - MoodBoardItem Association
-MoodBoard.hasMany(MoodBoardItem);
-MoodBoardItem.belongsTo(MoodBoard);
+// // Add models to db object
+// db.User = User;
+// db.Event = Event;
+// db.Guest = Guest;
+// db.Vendor = Vendor;
+// db.VendorAttachment = VendorAttachment;
+// db.MoodBoard = MoodBoard;
+// db.MoodBoardItem = MoodBoardItem;
+// db.Table = Table;
+// db.Seat = Seat;
+// db.EventParty = EventParty;
+// db.Member = Member;
+// db.Task = Task;
+// db.Photo = Photo;
+// db.Song = Song;
 
-// Event - SeatingChart Association
-// Event.hasOne(SeatingChart);
-// SeatingChart.belongsTo(Event);
+// // Call associate methods if they exist
+// Object.keys(db).forEach(modelName => {
+//   if (db[modelName].associate) {
+//     db[modelName].associate(db);
+//   }
+// });
 
-// SeatingChart - Table Association
-// SeatingChart.hasMany(Table);
-// Table.belongsTo(SeatingChart);
+// // Define relationships (not defined in model files)
+// // User - Event Association
+// User.hasMany(Event);
+// Event.belongsTo(User);
 
-// Table - Seat Association
-Table.hasMany(Seat);
-Seat.belongsTo(Table);
+// // Event - Guest Association
+// Event.hasMany(Guest);
+// Guest.belongsTo(Event);
 
-// Seat - Guest Association (optional)
-Seat.belongsTo(Guest, { constraints: false });
+// // Event - Vendor Association
+// Event.hasMany(Vendor);
+// Vendor.belongsTo(Event);
 
-// Event - EventParty Association
-Event.hasOne(EventParty);
-EventParty.belongsTo(Event);
+// // Vendor - VendorAttachment Association
+// Vendor.hasMany(VendorAttachment);
+// VendorAttachment.belongsTo(Vendor);
 
-// EventParty - Member Association
-EventParty.hasMany(Member);
-Member.belongsTo(EventParty);
+// // Event - MoodBoard Association
+// Event.hasMany(MoodBoard);
+// MoodBoard.belongsTo(Event);
 
-// Member - User Association (optional)
-Member.belongsTo(User, { constraints: false });
+// // MoodBoard - MoodBoardItem Association
+// MoodBoard.hasMany(MoodBoardItem);
+// MoodBoardItem.belongsTo(MoodBoard);
 
-// Member - Task Association
-Member.hasMany(Task);
-Task.belongsTo(Member);
+// // Table - Seat Association
+// Table.hasMany(Seat);
+// Seat.belongsTo(Table);
 
-// Event - Photo Association
-Event.hasMany(Photo);
-Photo.belongsTo(Event);
+// // Seat - Guest Association
+// Seat.belongsTo(Guest, { constraints: false });
 
-// Photo - User Association (who uploaded)
-User.hasMany(Photo);
-Photo.belongsTo(User, { as: 'uploadedBy' });
+// // Event - EventParty Association
+// Event.hasOne(EventParty);
+// EventParty.belongsTo(Event);
 
-// Photo - Like Association
-// Photo.hasMany(Like);
-// Like.belongsTo(Photo);
-// User.hasMany(Like);
-// Like.belongsTo(User);
+// // EventParty - Member Association
+// EventParty.hasMany(Member);
+// Member.belongsTo(EventParty);
 
-// Photo - Comment Association
-// Photo.hasMany(Comment);
-// Comment.belongsTo(Photo);
-// User.hasMany(Comment);
-// Comment.belongsTo(User);
+// // Member - User Association
+// Member.belongsTo(User, { constraints: false });
 
-// Event - Playlist Association
-// Event.hasOne(Playlist);
-// Playlist.belongsTo(Event);
+// // Member - Task Association
+// Member.hasMany(Task);
+// Task.belongsTo(Member);
 
-// Playlist - Song Association
-// Playlist.hasMany(Song);
-// Song.belongsTo(Playlist);
+// // Event - Photo Association
+// Event.hasMany(Photo);
+// Photo.belongsTo(Event);
 
-// Song - User Association (optional)
-Song.belongsTo(User, { as: 'requestedBy', constraints: false });
+// // Photo - User Association (who uploaded)
+// User.hasMany(Photo);
+// Photo.belongsTo(User, { as: 'uploadedBy' });
 
-// Sync all models with database
-const syncDatabase = async () => {
-  try {
-    if (process.env.NODE_ENV === 'development') {
-      // Use force: true only in development to drop tables
-      // await sequelize.sync({ force: true });
+// // Song - User Association
+// Song.belongsTo(User, { as: 'requestedBy', constraints: false });
+
+// // Add sequelize to db object
+// db.sequelize = sequelize;
+// db.Sequelize = Sequelize;
+
+// // Export only the db object - avoid exporting multiple variables
+// module.exports = db;
+
+// const path = require('path');
+// const { Sequelize, DataTypes } = require('sequelize');
+// const process = require('process');
+// const basename = path.basename(__filename);
+// const env = process.env.NODE_ENV || 'development';
+// const { tables } = require('../../config/db');
+// const db = {};
+
+// // const fs = require('fs');
+// // const path = require('path');
+// // // const Sequelize = require('sequelize');
+// // const { DataTypes } = require('sequelize');
+// // const { sequelize } = require('../config/db');
+// // const process = require('process');
+// // const basename = path.basename(__filename);
+// // const env = process.env.NODE_ENV || 'development';
+// const config = require(__dirname + '/../../config/database.js')[env];
+// // const db = {};
+
+// // Initialize sequelize instance
+// let sequelize;
+// if (config.use_env_variable) {
+//   sequelize = new Sequelize(process.env[config.use_env_variable], config);
+// } else {
+//   sequelize = new Sequelize(config);
+// }
+
+// // Import all models
+// const User = require('./user')(sequelize, DataTypes);
+// const Event = require('./Event')(sequelize, DataTypes);
+// const Guest = require('./Guest')(sequelize, DataTypes);
+// const Vendor = require('./Vendor')(sequelize, DataTypes);
+// const VendorAttachment = require('./VendorAttachment')(sequelize, DataTypes);
+// const MoodBoard = require('./MoodBoard')(sequelize, DataTypes);
+// const MoodBoardItem = require('./MoodBoardItem')(sequelize, DataTypes);
+// const Table = require('./Table')(sequelize, DataTypes);
+// const Seat = require('./Seat')(sequelize, DataTypes);
+// const EventParty = require('./EventParty')(sequelize, DataTypes);
+// const Member = require('./Member')(sequelize, DataTypes);
+// const Task = require('./Task')(sequelize, DataTypes);
+// const Photo = require('./Photo')(sequelize, DataTypes);
+// const Song = require('./Song')(sequelize, DataTypes);
+
+// // Add models to db object
+// db.User = User;
+// db.Event = Event;
+// db.Guest = Guest;
+// db.Vendor = Vendor;
+// db.VendorAttachment = VendorAttachment;
+// db.MoodBoard = MoodBoard;
+// db.MoodBoardItem = MoodBoardItem;
+// db.Table = Table;
+// db.Seat = Seat;
+// db.EventParty = EventParty;
+// db.Member = Member;
+// db.Task = Task;
+// db.Photo = Photo;
+// db.Song = Song;
+
+// // Call associate methods if they exist
+// Object.keys(db).forEach(modelName => {
+//   if (db[modelName].associate) {
+//     db[modelName].associate(db);
+//   }
+// });
+
+// // Define relationships (not defined in model files)
+// // User - Event Association
+// User.hasMany(Event);
+// Event.belongsTo(User);
+
+// // Event - Guest Association
+// Event.hasMany(Guest);
+// Guest.belongsTo(Event);
+
+// // Event - Vendor Association
+// Event.hasMany(Vendor);
+// Vendor.belongsTo(Event);
+
+// // Vendor - VendorAttachment Association
+// Vendor.hasMany(VendorAttachment);
+// VendorAttachment.belongsTo(Vendor);
+
+// // Event - MoodBoard Association
+// Event.hasMany(MoodBoard);
+// MoodBoard.belongsTo(Event);
+
+// // MoodBoard - MoodBoardItem Association
+// MoodBoard.hasMany(MoodBoardItem);
+// MoodBoardItem.belongsTo(MoodBoard);
+
+// // Event - SeatingChart Association
+// // Event.hasOne(SeatingChart);
+// // SeatingChart.belongsTo(Event);
+
+// // SeatingChart - Table Association
+// // SeatingChart.hasMany(Table);
+// // Table.belongsTo(SeatingChart);
+
+// // Table - Seat Association
+// Table.hasMany(Seat);
+// Seat.belongsTo(Table);
+
+// // Seat - Guest Association
+// Seat.belongsTo(Guest, { constraints: false });
+
+// // Event - EventParty Association
+// Event.hasOne(EventParty);
+// EventParty.belongsTo(Event);
+
+// // EventParty - Member Association
+// EventParty.hasMany(Member);
+// Member.belongsTo(EventParty);
+
+// // Member - User Association
+// Member.belongsTo(User, { constraints: false });
+
+// // Member - Task Association
+// Member.hasMany(Task);
+// Task.belongsTo(Member);
+
+// // Event - Photo Association
+// Event.hasMany(Photo);
+// Photo.belongsTo(Event);
+
+// // Photo - User Association (who uploaded)
+// User.hasMany(Photo);
+// Photo.belongsTo(User, { as: 'uploadedBy' });
+
+// // Photo - Like Association
+// // Photo.hasMany(Like);
+// // Like.belongsTo(Photo);
+// // User.hasMany(Like);
+// // Like.belongsTo(User);
+
+// // Photo - Comment Association
+// // Photo.hasMany(Comment);
+// // Comment.belongsTo(Photo);
+// // User.hasMany(Comment);
+// // Comment.belongsTo(User);
+
+// // Event - Playlist Association
+// // Event.hasOne(Playlist);
+// // Playlist.belongsTo(Event);
+
+// // Playlist - Song Association
+// // Playlist.hasMany(Song);
+// // Song.belongsTo(Playlist);
+
+// // Song - User Association
+// Song.belongsTo(User, { as: 'requestedBy', constraints: false });
+
+// // Sync all models with database
+// const syncDatabase = async () => {
+//   try {
+//     if (process.env.NODE_ENV === 'development') {
+//       // Use force: true only in development to drop tables
+//       await sequelize.sync({ force: true });
       
-      // For production, use alter: true to make safe changes
-      await sequelize.sync({ alter: true });
-      console.log('Database synced successfully');
-    } else {
-      // In production, just sync without altering structure
-      await sequelize.sync();
-      console.log('Database connected successfully');
-    }
-  } catch (error) {
-    console.error('Error syncing database:', error);
-  }
-};
+//       // For production, use alter: true to make safe changes
+//       await sequelize.sync({ alter: true });
+//       console.log('Database synced successfully');
+//     } else {
+//       // In production, sync without altering structure
+//       await sequelize.sync();
+//       console.log('Database connected successfully');
+//     }
+//   } catch (error) {
+//     console.error('Error syncing database:', error);
+//   }
+// };
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+// db.sequelize = sequelize;
+// db.Sequelize = Sequelize;
 
-module.exports = {
-  db,
-  sequelize,
-  syncDatabase,
-  User,
-  Event,
-  Guest,
-  Vendor,
-  VendorAttachment,
-  MoodBoard,
-  MoodBoardItem,
-  Table,
-  Seat,
-  EventParty,
-  Member,
-  Task,
-  Photo,
-  Song
-};
+// module.exports = db;
+// // module.exports = {
+// //   db,
+// //   sequelize,
+// //   syncDatabase,
+// //   User,
+// //   Event,
+// //   Guest,
+// //   Vendor,
+// //   VendorAttachment,
+// //   MoodBoard,
+// //   MoodBoardItem,
+// //   Table,
+// //   Seat,
+// //   EventParty,
+// //   Member,
+// //   Task,
+// //   Photo,
+// //   Song
+// // };
