@@ -3,6 +3,7 @@ const { Model, DataTypes } = require('sequelize');
 class Vendor extends Model {
   static associate(models) {
     Vendor.belongsTo(models.Event);
+    Vendor.hasMany(models.EventParty);
     Vendor.hasMany(models.VendorAttachment);
   }
 }
