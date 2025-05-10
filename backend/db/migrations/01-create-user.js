@@ -2,6 +2,7 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
+    const { DataTypes } = Sequelize;
     let options = {};
     if (process.env.NODE_ENV === 'production') {
       options.schema = process.env.SCHEMA;
@@ -40,7 +41,7 @@ module.exports = {
         comment: 'Specific role in the event (e.g., "Mother of the Bride", "Best Man", "Bridesmaid")'
       },
       planningPermissions: {
-        type: Sequelize.ENUM('none', 'view', 'edit', 'full'),
+        type: DataTypes.ENUM('none', 'view', 'edit', 'full'),
         defaultValue: 'none',
         comment: 'Access level for event planning features'
       },
