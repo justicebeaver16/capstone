@@ -28,7 +28,6 @@ dotenv.config();
 // const eventpartyRoutes = require('./routes/eventpartyRoutes');
 // const scheduleRoutes = require('./routes/scheduleRoutes');
 // const photoRoutes = require('./routes/photoRoutes');
-// const playlistRoutes = require('./routes/playlistRoutes');
 
 // Initialize
 const isProduction = environment === 'production';
@@ -45,17 +44,16 @@ app.use(routes); // Connect all the routes
 syncDatabase();
 
 // API Routes
-// app.use('/api/auth', require('./routes/api/authRoutes'));
-// app.use('/api/users', require('./routes/api/userRoutes'));
-// app.use('/api/events', require('./routes/api/eventRoutes'));
-// app.use('/api/moodboard', require('./routes/api/moodboardRoutes'));
-// app.use('/api/vendors', require('./routes/api/vendorRoutes'));
-// app.use('/api/guestlist', require('./routes/api/guestlistRoutes'));
-// app.use('/api/seating', require('./routes/api/seatingRoutes'));
-// app.use('/api/eventparty', require('./routes/api/eventpartyRoutes'));
-// app.use('/api/schedule', require('./routes/api/scheduleRoutes'));
-// app.use('/api/photos', require('./routes/api/photoRoutes'));
-// app.use('/api/playlist', require('./routes/api/playlistRoutes'));
+app.use('/api/auth', require('./routes/api/authRoutes'));
+app.use('/api/users', require('./routes/api/userRoutes'));
+app.use('/api/events', require('./routes/api/eventRoutes'));
+app.use('/api/moodboard', require('./routes/api/moodboardRoutes'));
+app.use('/api/vendors', require('./routes/api/vendorRoutes'));
+app.use('/api/guestlist', require('./routes/api/guestlistRoutes'));
+app.use('/api/seating', require('./routes/api/seatingRoutes'));
+app.use('/api/eventparty', require('./routes/api/eventpartyRoutes'));
+app.use('/api/schedule', require('./routes/api/scheduleRoutes'));
+app.use('/api/photos', require('./routes/api/photoRoutes'));
 
 
 // Security Middleware
