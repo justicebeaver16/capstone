@@ -21,7 +21,7 @@ const Tasks = () => {
   return (
     <div className="tasks-container">
       <h1>Event Task Manager</h1>
-      <p>Keep track of appointments, deadlines, and your event's day-of schedule.</p>
+      <p>Keep track of appointments, deadlines, and your event&apos;s day-of schedule.</p>
 
       <div className="add-task-form">
         <input

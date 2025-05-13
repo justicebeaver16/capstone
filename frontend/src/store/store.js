@@ -1,6 +1,10 @@
 import { legacy_createStore as createStore, combineReducers, applyMiddleware, compose } from 'redux';
-import thunk from 'redux-thunk';
-import sessionReducer from '../slices/sessionSlice';
+import { thunk } from 'redux-thunk';
+import sessionReducer from './slices/sessionReducer';
+import eventsReducer from './slices/eventsSlice';
+import guestsReducer from './slices/guestsSlice';
+import vendorsReducer from './slices/vendorsSlice';
+import seatingReducer from './slices/seatingSlice';
 
 // Reducers
 const rootReducer = combineReducers({
@@ -8,7 +12,7 @@ const rootReducer = combineReducers({
   events: eventsReducer,
   guests: guestsReducer,
   vendors: vendorsReducer,
-  seating: seatingReducer
+  seating: seatingReducer,
 });
 
 let enhancer;

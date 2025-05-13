@@ -10,7 +10,6 @@ import { Modal, ModalProvider } from './context/Modal';
 
 const store = configureStore();
 
-// Dev utils (CSRF fetch, store, session actions)
 if (import.meta.env.MODE !== 'production') {
   restoreCSRF();
   window.csrfFetch = csrfFetch;
