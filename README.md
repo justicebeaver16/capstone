@@ -10,7 +10,7 @@ It's Happening is a comprehensive event planning application that serves as a on
 	•	Seating Arrangements: Create interactive seating charts with drag-and-drop functionality
 	•	Event Party Management: Assign tasks to event team members and track completion
 	•	Photo Album: Share, like, and comment on event photos
-	•	Playlist Creation: Collect song requests from guests and organize your event playlist
+	•	Song Requests: Collect song requests from guests to dance the night away
 	•	Timeline & Scheduling: Keep track of appointments, deadlines, and day-of schedules
 
 🚀 Getting Started

@@ -1,112 +1,31 @@
-/* Basic reset and container styling */
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    background-color: #333;
-    height: 60px;
-    align-items: center;
-  }
-  
-  /* Navigation list items */
-  li {
-    margin: 0 15px;
-    position: relative; /* Added to ensure proper dropdown positioning */
-  }
-  
-  /* Link styling */
-  a {
-    text-decoration: none;
-    color: white;
-    font-weight: 500;
-    padding: 10px 15px;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-  }
-  
-  a:hover {
-    background-color: #555;
-  }
-  
-  /* Active link styling */
-  .active {
-    background-color: #4CAF50;
-    color: white;
-  }
-  
-  /* Button styling to match links */
-  button {
-    background-color: transparent;
-    border: none;
-    color: white;
-    font-weight: 500;
-    padding: 10px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  button:hover {
-    background-color: #555;
-  }
-  
-  /* Space out the navigation - home on left, auth on right */
-  ul {
-    justify-content: space-between;
-  }
-  
-  /* Group the authentication links */
-  ul li:first-child {
-    margin-right: auto;
-  }
-  
-  /* Hide elements with hidden class */
-  .hidden {
-    display: none !important;
-  }
-  
-  /* ProfileButton specific styling */
-  .profile-dropdown {
-    position: absolute;
-    top: 45px; /* Adjusted to be closer to the button */
-    right: 0;
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    width: 200px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    display: flex;
-    flex-direction: column;
-    padding: 10px 0;
-    z-index: 10; /* Ensure dropdown appears above other elements */
-  }
-  
-  .profile-dropdown li {
-    margin: 5px 0;
-    padding: 8px 15px;
-    color: #333;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .profile-dropdown button {
-    color: #333;
-    width: 100%;
-    text-align: left;
-    padding: 8px 15px;
-    border-radius: 0;
-    transition: background-color 0.2s ease;
-  }
-  
-  .profile-dropdown button:hover {
-    background-color: #f5f5f5;
-    color: #000;
-  }
-  
-  /* User icon styling */
-  button svg {
-    font-size: 24px; /* Makes the user icon larger */
-    color: white;
-  }
+.navigation {
+  background-color: #333;
+  padding: 1rem;
+}
+
+.navigation ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+.navigation a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.navigation a.active-link {
+  border-bottom: 2px solid #4caf50;
+}
+
+.navigation a:hover {
+  color: #4caf50;
+}
+
+.profile-button-container {
+  margin-left: auto;
+}

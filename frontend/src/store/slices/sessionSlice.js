@@ -1,4 +1,4 @@
-import { csrfFetch } from './csrf';
+import { csrfFetch } from '../csrf';
 
 // Action Types
 const SET_SESSION_USER = 'session/SET_SESSION_USER';
