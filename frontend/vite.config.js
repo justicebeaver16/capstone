@@ -12,7 +12,13 @@ export default defineConfig(({ mode }) => ({
   ],
   server: {
     proxy: {
-      '/api': 'http://localhost:8000'
+      '/api': 'http://localhost:8000' // Local dev
     },
+    historyApiFallback: true,
+  },
+  base: './',
+  build: {
+    outDir: 'dist',
+    emptyOutDir: true, // Clean before build
   }
 }));
