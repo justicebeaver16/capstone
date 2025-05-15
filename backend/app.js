@@ -47,6 +47,11 @@ app.use(
   })
 );
 
+app.use((req, res, next) => {
+  console.log(`[REQ] ${req.method} ${req.originalUrl}`);
+  next();
+});
+
 // API routes
 app.use('/api', routes);
 
