@@ -4,6 +4,7 @@ const { restoreUser } = require("../../utils/auth.js");
 // Route modules
 const sessionRouter = require('./session.js');
 const usersRouter = require('./users.js');
+const csrfRouter = require('./csrf.js');
 const authRoutes = require('./authRoutes.js');
 const userRoutes = require('./userRoutes.js');
 const eventRoutes = require('./eventRoutes.js');
@@ -17,6 +18,9 @@ const photoRoutes = require('./photoRoutes.js');
 
 // Middleware to restore user session
 router.use(restoreUser);
+
+// CSRF Route
+router.use('/csrf', csrfRouter);
 
 // Auth/session routes
 router.use('/session', sessionRouter);
