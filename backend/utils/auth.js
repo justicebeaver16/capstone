@@ -1,9 +1,10 @@
 const jwt = require('jsonwebtoken');
 const { jwtConfig } = require('../config');
-const { User } = require('../../db/models');
+const { User } = require('../db/models');
 
 const { secret, expiresIn } = jwtConfig;
 
+// Sends a JWT Cookie (secure for cross-origin)
 const setTokenCookie = (res, user) => {
   const safeUser = {
     id: user.id,
