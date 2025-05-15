@@ -7,18 +7,14 @@ const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const path = require('path');
-const { syncDatabase } = require('./db/models');
-const { environment } = require('./config');
 const { ValidationError } = require('sequelize');
 const routes = require('./routes');
+const { environment } = require('./config');
 
 dotenv.config();
 
 const isProduction = environment === 'production';
 const app = express();
-
-// Sync Database
-// syncDatabase();
 
 // Core Middleware
 app.use(morgan('dev'));
@@ -26,47 +22,39 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Security Middleware
-if (!isProduction) {
-  app.use(cors());
-}
-
+// Security
 app.use(
   helmet.crossOriginResourcePolicy({
     policy: "cross-origin",
   })
 );
 
-// CSRF Protection
+// CORS
+app.use(cors({
+  origin: 'https://your-frontend-service.onrender.com', // Replace with your frontend Render URL
+  credentials: true,
+}));
+
+// CSRF
 app.use(
   csurf({
     cookie: {
       secure: isProduction,
-      sameSite: isProduction && "Lax",
+      sameSite: isProduction ? 'None' : 'Lax',
       httpOnly: true,
     },
   })
 );
 
 // API Routes
-app.use('/api/csrf', require('./routes/api/csrf'));
-app.use('/api/session', require('./routes/api/session'));
-app.use('/api/auth', require('./routes/api/authRoutes'));
-app.use('/api/users', require('./routes/api/userRoutes'));
-app.use('/api/events', require('./routes/api/eventRoutes'));
-app.use('/api/moodboard', require('./routes/api/moodboardRoutes'));
-app.use('/api/vendors', require('./routes/api/vendorRoutes'));
-app.use('/api/guestlist', require('./routes/api/guestlistRoutes'));
-app.use('/api/seating', require('./routes/api/seatingRoutes'));
-app.use('/api/eventparty', require('./routes/api/eventpartyRoutes'));
-app.use('/api/schedule', require('./routes/api/scheduleRoutes'));
-app.use('/api/photos', require('./routes/api/photoRoutes'));
+app.use('/api', routes);
 
-// Health check route
+// Health Check
 app.get('/health', (req, res) => {
   res.status(200).send('OK');
 });
 
+// Serve frontend in production
 if (isProduction) {
   const staticPath = path.join(__dirname, '../frontend/dist');
   app.use(express.static(staticPath));
@@ -76,7 +64,7 @@ if (isProduction) {
   });
 }
 
-// 404 Handler (for APIs only, will not trigger in production for frontend)
+// 404 API only
 app.use((_req, _res, next) => {
   const err = new Error("The requested resource couldn't be found.");
   err.title = "Resource Not Found";
@@ -109,13 +97,5 @@ app.use((err, _req, res, _next) => {
     stack: isProduction ? null : err.stack,
   });
 });
-
-// Start the server
-if (require.main === module) {
-  const port = process.env.PORT || 8000;
-  app.listen(port, () => {
-    console.log(`Backend server running on http://localhost:${port}`);
-  });
-}
 
 module.exports = app;

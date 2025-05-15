@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 
-// CSRF-protected fetch wrapper
+// CSRF-protected fetch wrapper with credentials included
 export async function csrfFetch(url, options = {}) {
   options.method = options.method || 'GET';
   options.headers = options.headers || {};
@@ -13,6 +13,9 @@ export async function csrfFetch(url, options = {}) {
       options.headers['X-CSRF-Token'] = csrfToken;
     }
   }
+
+  // For Render deployment
+  options.credentials = 'include';
 
   const res = await window.fetch(url, options);
 
