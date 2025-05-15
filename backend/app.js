@@ -31,11 +31,11 @@ app.use(
 
 // CORS
 app.use(cors({
-  origin: 'https://your-frontend-service.onrender.com', // Replace with your frontend Render URL
+  origin: 'https://its-happening.onrender.com/',
   credentials: true,
 }));
 
-// CSRF
+// CSRF with safe cookie config
 app.use(
   csurf({
     cookie: {
@@ -54,7 +54,7 @@ app.get('/health', (req, res) => {
   res.status(200).send('OK');
 });
 
-// Serve frontend in production
+// Serve frontend
 if (isProduction) {
   const staticPath = path.join(__dirname, '../frontend/dist');
   app.use(express.static(staticPath));
@@ -64,7 +64,7 @@ if (isProduction) {
   });
 }
 
-// 404 API only
+// 404 API fallback
 app.use((_req, _res, next) => {
   const err = new Error("The requested resource couldn't be found.");
   err.title = "Resource Not Found";

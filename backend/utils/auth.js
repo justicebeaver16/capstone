@@ -4,7 +4,6 @@ const { User } = require('../db/models');
 
 const { secret, expiresIn } = jwtConfig;
 
-// Sends a JWT Cookie (secure for cross-origin)
 const setTokenCookie = (res, user) => {
   const safeUser = {
     id: user.id,
@@ -33,6 +32,8 @@ const setTokenCookie = (res, user) => {
 const restoreUser = (req, res, next) => {
   const { token } = req.cookies;
   req.user = null;
+
+  if (!token) return next();
 
   return jwt.verify(token, secret, null, async (err, jwtPayload) => {
     if (err) {
