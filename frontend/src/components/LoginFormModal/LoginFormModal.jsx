@@ -14,7 +14,7 @@ function LoginFormModal({ onClose }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors({});
-    return dispatch(sessionActions.login({ credential, password }))
+    return dispatch(sessionActions.login(credential, password))
       .then(() => {
         if (onClose) onClose();
         else closeModal();
@@ -33,7 +33,7 @@ function LoginFormModal({ onClose }) {
         <h1>Log In</h1>
         <form onSubmit={handleSubmit} className="login-form">
           <label>
-            Username or Email
+            Email
             <input
               type="text"
               value={credential}

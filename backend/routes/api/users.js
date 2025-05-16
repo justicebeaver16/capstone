@@ -1,7 +1,8 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
+// const bcrypt = require('bcryptjs');
 
-const { setTokenCookie, requireAuth } = require('../../utils/auth');
+// const { setTokenCookie, requireAuth } = require('../../utils/auth');
+const { setTokenCookie } = require('../../utils/auth');
 const { User } = require('../../db/models');
 
 const { check } = require('express-validator');
@@ -15,14 +16,14 @@ const validateSignup = [
       .exists({ checkFalsy: true })
       .isEmail()
       .withMessage('Please provide a valid email.'),
-    check('username')
-      .exists({ checkFalsy: true })
-      .isLength({ min: 4 })
-      .withMessage('Please provide a username with at least 4 characters.'),
-    check('username')
-      .not()
-      .isEmail()
-      .withMessage('Username cannot be an email.'),
+    // check('username')
+    //   .exists({ checkFalsy: true })
+    //   .isLength({ min: 4 })
+    //   .withMessage('Please provide a username with at least 4 characters.'),
+    // check('username')
+    //   .not()
+    //   .isEmail()
+    //   .withMessage('Username cannot be an email.'),
     check('password')
       .exists({ checkFalsy: true })
       .isLength({ min: 6 })
@@ -33,22 +34,19 @@ router.post(
     '/',
     validateSignup,
     async (req, res) => {
-      const { email, password, username, firstName, lastName } = req.body;
-      const hashedPassword = bcrypt.hashSync(password);
+      const { email, password, firstName, lastName } = req.body;
+      // const { email, password, name} = req.body;
+      // const hashedPassword = bcrypt.hashSync(password);
       const user = await User.create({
       email,
-      username,
-      firstName,
-      lastName,
-      hashedPassword
+      name: `${firstName} ${lastName}`,
+      password,
     });
   
       const safeUser = {
-      id: user.id,
-      email: user.email,
-      username: user.username,
-      firstName: user.firstName,
-      lastName: user.lastName,
+        id: user.id,
+        email: user.email,
+        name: user.name,
     };
   
       await setTokenCookie(res, safeUser);

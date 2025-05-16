@@ -7,7 +7,7 @@ import './SignupFormModal.css';
 function SignupFormModal({ onClose }) {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
+  // const [username, setUsername] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
@@ -22,7 +22,6 @@ function SignupFormModal({ onClose }) {
       return dispatch(
         sessionActions.signup({
           email,
-          username,
           firstName,
           lastName,
           password
@@ -60,7 +59,7 @@ function SignupFormModal({ onClose }) {
           </label>
           {errors.email && <p className="error-message">{errors.email}</p>}
 
-          <label>
+          {/* <label>
             Username
             <input
               type="text"
@@ -69,7 +68,7 @@ function SignupFormModal({ onClose }) {
               required
             />
           </label>
-          {errors.username && <p className="error-message">{errors.username}</p>}
+          {errors.username && <p className="error-message">{errors.username}</p>} */}
 
           <label>
             First Name

@@ -23,19 +23,6 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Security Headers
-app.use(
-  helmet.crossOriginResourcePolicy({
-    policy: 'cross-origin',
-  })
-);
-
-// CORS
-app.use(cors({
-  origin: 'https://its-happening.onrender.com',
-  credentials: true,
-}));
-
 // CSRF
 app.use(
   csurf({
@@ -47,10 +34,38 @@ app.use(
   })
 );
 
-app.use((req, res, next) => {
-  console.log(`[REQ] ${req.method} ${req.originalUrl}`);
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log(`[REQ] ${req.method} ${req.originalUrl}`);
+//   next();
+// });
+// Dev CSRF route directly here
+if (!isProduction) {
+  app.get('/api/csrf/restore', (req, res) => {
+    const csrfToken = req.csrfToken();
+    res.cookie('XSRF-TOKEN', csrfToken);
+    res.status(200).json({
+      'XSRF-Token': csrfToken,
+    });
+  });
+}
+app.use('/api', require('./routes/api'));
+
+// Security Headers
+app.use(
+  helmet.crossOriginResourcePolicy({
+    policy: 'cross-origin',
+  })
+);
+
+
+
+// CORS
+app.use(cors({
+  origin: 'https://its-happening.onrender.com',
+  credentials: true,
+}));
+
+
 
 // API routes
 app.use('/api', routes);
