@@ -10,7 +10,7 @@ function Navigation({ isLoaded }) {
     <nav className="navigation">
       <ul>
         <li>
-          <NavLink to="/" className={({ isActive }) => isActive ? 'active-link' : ''}>
+          <NavLink to="/dashboard" className={({ isActive }) => isActive ? 'active-link' : ''}>
             Dashboard
           </NavLink>
         </li>
