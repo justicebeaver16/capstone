@@ -24,5 +24,22 @@ const router = express.Router();
 //     res.status(500).json({ error: 'Error updating user passwords' });
 //   }
 // });
+router.get('/check-password/:email', async (req, res) => {
+  try {
+    const user = await User.findOne({ where: { email: req.params.email } });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    return res.json({
+      email: user.email,
+      password: user.password // remove after testing
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Something went wrong' });
+  }
+});
 
 module.exports = router;
