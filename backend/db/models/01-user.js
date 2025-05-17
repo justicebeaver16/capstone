@@ -1,3 +1,4 @@
+// User Model
 const { Model, DataTypes } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -130,6 +131,10 @@ module.exports = (sequelize) => {
     }
   }
 }
+  });
+
+  return User;
+};
     // hooks: {
     //   beforeCreate: async (user) => {
     //     if (user.password) {
@@ -144,7 +149,7 @@ module.exports = (sequelize) => {
     //     }
     //   }
     // }
-  });
+//   });
 
-  return User;
-};
+//   return User;
+// };

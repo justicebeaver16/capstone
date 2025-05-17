@@ -213,6 +213,7 @@
 //   }
 // };
 
+// User seeder
 'use strict';
 
 const bcrypt = require('bcryptjs');
@@ -224,6 +225,27 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
+    const now = new Date();
+  const Op = Sequelize.Op;
+
+  // Clean up existing users with conflicting emails
+  await queryInterface.bulkDelete('Users', {
+    email: {
+      [Op.in]: [
+        'olivia.martinez@example.com',
+        'emily.rivera@example.com',
+        'sophia.kim@example.com',
+        'admin@example.com',
+        'planner@example.com',
+        'maid@example.com',
+        'bestman@example.com',
+        'bridesmaid@example.com',
+        'catering@example.com',
+        'photo@example.com',
+        'user@example.com'
+      ]
+    }
+  }, {});
     await queryInterface.bulkInsert('Users', [
 {
 name: 'Olivia Martinez',
@@ -235,8 +257,8 @@ eventRole: 'Bride',
 planningPermissions: 'full',
 isVendor: false,
 vendorId: null,
-createdAt: new Date(),
-updatedAt: new Date()
+createdAt: now,
+updatedAt: now
 },
       {
         name: 'Emily Rivera',
@@ -248,8 +270,8 @@ updatedAt: new Date()
         planningPermissions: 'edit',
         isVendor: false,
         vendorId: null,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        createdAt: now,
+        updatedAt: now
       },
       {
         name: 'Sophia Kim',
@@ -261,8 +283,8 @@ updatedAt: new Date()
         planningPermissions: 'view',
         isVendor: false,
         vendorId: null,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        createdAt: now,
+        updatedAt: now
       },
       {
         name: 'Admin User',
@@ -274,8 +296,8 @@ updatedAt: new Date()
         planningPermissions: 'full',
         isVendor: false,
         vendorId: null,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        createdAt: now,
+        updatedAt: now
       },
       {
         name: 'Jane Smith',
@@ -287,8 +309,8 @@ updatedAt: new Date()
         planningPermissions: 'full',
         isVendor: false,
         vendorId: null,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        createdAt: now,
+        updatedAt: now
       },
       {
         name: 'John Doe',
@@ -300,8 +322,8 @@ updatedAt: new Date()
         planningPermissions: 'full',
         isVendor: false,
         vendorId: null,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        createdAt: now,
+        updatedAt: now
       },
       {
         name: 'Sarah Williams',
@@ -313,7 +335,7 @@ updatedAt: new Date()
         planningPermissions: 'full',
         isVendor: false,
         vendorId: null,
-        createdAt: new Date(),
+        createdAt: now,
         updatedAt: new Date()
       },
       {
@@ -326,8 +348,8 @@ updatedAt: new Date()
         planningPermissions: 'edit',
         isVendor: false,
         vendorId: null,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        createdAt: now,
+        updatedAt: now
       },
       {
         name: 'Mike Thompson',
@@ -339,8 +361,8 @@ updatedAt: new Date()
         planningPermissions: 'view',
         isVendor: false,
         vendorId: null,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        createdAt: now,
+        updatedAt: now
       },
       {
         name: 'Lisa Davis',
@@ -352,8 +374,8 @@ updatedAt: new Date()
         planningPermissions: 'none',
         isVendor: false,
         vendorId: null,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        createdAt: now,
+        updatedAt: now
       },
       {
         name: 'Catering Services',
@@ -365,7 +387,7 @@ updatedAt: new Date()
         planningPermissions: 'none',
         isVendor: true,
         vendorId: 1,
-        createdAt: new Date(),
+        createdAt: now,
         updatedAt: new Date()
       },
       {
@@ -378,8 +400,8 @@ updatedAt: new Date()
         planningPermissions: 'none',
         isVendor: true,
         vendorId: 2,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        createdAt: now,
+        updatedAt: now
       },
       {
         name: 'Regular User',
@@ -391,8 +413,8 @@ updatedAt: new Date()
         planningPermissions: 'none',
         isVendor: false,
         vendorId: null,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        createdAt: now,
+        updatedAt: now
       }
     ], options);
   },
