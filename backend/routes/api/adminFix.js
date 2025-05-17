@@ -72,20 +72,20 @@ router.get('/check-password/:email', async (req, res) => {
   }
 });
 
-router.delete('/delete-user/olivia', async (req, res) => {
+router.get('/delete-user/olivia', async (req, res) => {
   try {
     const deleted = await User.destroy({
       where: { email: 'olivia.martinez@example.com' }
     });
 
     if (deleted) {
-      res.json({ message: 'Deleted Olivia from production DB.' });
+      res.json({ message: 'Olivia deleted successfully.' });
     } else {
-      res.status(404).json({ message: 'No such user found.' });
+      res.status(404).json({ message: 'Olivia not found.' });
     }
   } catch (err) {
-    console.error('Error deleting user:', err);
-    res.status(500).json({ error: 'Failed to delete user' });
+    console.error('Error deleting Olivia:', err);
+    res.status(500).json({ error: 'Server error while deleting Olivia' });
   }
 });
 
