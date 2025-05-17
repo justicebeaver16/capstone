@@ -29,6 +29,7 @@ router.get('/', requireAuth, async (req, res) => {
     });
     res.json(vendors);
   } catch (err) {
+    console.error('Error in /api/vendors:', err); // remove after testing
     res.status(500).json({ message: 'Failed to fetch vendors', error: err.message });
   }
 });
