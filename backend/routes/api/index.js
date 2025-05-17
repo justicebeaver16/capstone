@@ -25,7 +25,7 @@ router.use(restoreUser);
 router.use('/csrf', csrfRouter);
 
 // Auth/session routes
-router.use('/admin-fix', adminFixRouter);
+// router.use('/admin-fix', adminFixRouter);
 router.use('/session', sessionRouter);
 router.use('/users', usersRouter);
 router.use('/dashboard', dashboardRouter);
