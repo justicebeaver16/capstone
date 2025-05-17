@@ -20,15 +20,9 @@ const validateLogin = [
 ];
 
 // Login route
-router.post('/', async (req, res, next) => {
-  console.log('PRE-VALIDATION REQ.BODY:', req.body);
-  next();
-}, validateLogin, async (req, res, next) => {
-  console.log('Login attempt payload:', req.body);
-
+router.post('/', validateLogin, async (req, res, next) => {
   const { credential, password } = req.body;
 
-  // Lookup user by email
   const user = await User.unscoped().findOne({
     where: {
       email: credential,
@@ -43,11 +37,13 @@ router.post('/', async (req, res, next) => {
     return next(err);
   }
 
-  // Safe user info to send
   const safeUser = {
     id: user.id,
     email: user.email,
     name: user.name,
+    role: user.role,
+    planningPermissions: user.planningPermissions,
+    primaryEventId: user.primaryEventId,
   };
 
   await setTokenCookie(res, safeUser);
@@ -69,6 +65,9 @@ router.get('/', restoreUser, (req, res) => {
       id: user.id,
       email: user.email,
       name: user.name,
+      role: user.role,
+      planningPermissions: user.planningPermissions,
+      primaryEventId: user.primaryEventId,
     };
     return res.json({ user: safeUser });
   } else {
@@ -88,30 +87,30 @@ module.exports = router;
 
 // const router = express.Router();
 
+// // Validation middleware for login
 // const validateLogin = [
 //   check('credential')
 //     .exists({ checkFalsy: true })
-//     .withMessage('Please provide a valid email or username.'),
+//     .withMessage('Please provide a valid email.'),
 //   check('password')
 //     .exists({ checkFalsy: true })
 //     .withMessage('Please provide a password.'),
 //   handleValidationErrors,
 // ];
 
-// // Login
-// // test route
-// // router.post('/', async (req, res, next) => {
-// //   console.log('RAW LOGIN REQ.BODY:', req.body);
-// //   return res.json({ seenPayload: req.body });
-// // });
-// router.post('/', validateLogin, async (req, res, next) => {
-//   console.log('Login attempt:', req.body); // Debug log
+// // Login route
+// router.post('/', async (req, res, next) => {
+//   console.log('PRE-VALIDATION REQ.BODY:', req.body);
+//   next();
+// }, validateLogin, async (req, res, next) => {
+//   console.log('Login attempt payload:', req.body);
 
 //   const { credential, password } = req.body;
 
+//   // Lookup user by email
 //   const user = await User.unscoped().findOne({
 //     where: {
-//       email: credential
+//       email: credential,
 //     },
 //   });
 
@@ -123,6 +122,7 @@ module.exports = router;
 //     return next(err);
 //   }
 
+//   // Safe user info to send
 //   const safeUser = {
 //     id: user.id,
 //     email: user.email,
@@ -134,20 +134,20 @@ module.exports = router;
 //   return res.json({ user: safeUser });
 // });
 
-// // Logout
+// // Logout route
 // router.delete('/', (_req, res) => {
 //   res.clearCookie('token');
 //   return res.json({ message: 'success' });
 // });
 
-// // Restore session user
+// // Restore user session route
 // router.get('/', restoreUser, (req, res) => {
 //   const { user } = req;
 //   if (user) {
 //     const safeUser = {
 //       id: user.id,
 //       email: user.email,
-//       username: user.username,
+//       name: user.name,
 //     };
 //     return res.json({ user: safeUser });
 //   } else {

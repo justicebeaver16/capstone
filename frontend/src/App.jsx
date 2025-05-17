@@ -6,6 +6,7 @@ import * as sessionActions from './store/session';
 import Homepage from './components/Homepage';
 import Dashboard from './components/Dashboard';
 import Vendors from './components/Vendors';
+import EditVendor from './components/Vendors/EditVendor';
 import GuestList from './components/GuestList';
 import MoodBoard from './components/MoodBoard';
 import Seating from './components/Seating';
@@ -35,6 +36,7 @@ const router = createBrowserRouter([
     children: [
       { path: '/dashboard', element: <Dashboard /> },
       { path: '/vendors', element: <Vendors /> },
+      { path: '/vendors/:vendorId/edit', element: <EditVendor /> },
       { path: '/guest-list', element: <GuestList /> },
       { path: '/mood-board', element: <MoodBoard /> },
       { path: '/seating', element: <Seating /> },
