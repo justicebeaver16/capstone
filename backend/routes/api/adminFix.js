@@ -24,6 +24,36 @@ const router = express.Router();
 //     res.status(500).json({ error: 'Error updating user passwords' });
 //   }
 // });
+
+router.post('/rehash-all-seeded', async (req, res) => {
+  const emails = [
+    'olivia.martinez@example.com',
+    'emily.rivera@example.com',
+    'sophia.kim@example.com',
+    'admin@example.com',
+    'planner@example.com',
+    'maid@example.com',
+    'bestman@example.com',
+    'bridesmaid@example.com',
+    'catering@example.com',
+    'photo@example.com',
+    'user@example.com'
+  ];
+
+  let updated = 0;
+
+  for (const email of emails) {
+    const user = await User.findOne({ where: { email } });
+    if (user && !user.password.startsWith('$2')) {
+      user.password = bcrypt.hashSync('password123', 10);
+      await user.save();
+      updated++;
+    }
+  }
+
+  res.json({ message: `Rehashed ${updated} users.` });
+});
+
 router.get('/check-password/:email', async (req, res) => {
   try {
     const user = await User.findOne({ where: { email: req.params.email } });
@@ -39,6 +69,23 @@ router.get('/check-password/:email', async (req, res) => {
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'Something went wrong' });
+  }
+});
+
+router.delete('/delete-user/olivia', async (req, res) => {
+  try {
+    const deleted = await User.destroy({
+      where: { email: 'olivia.martinez@example.com' }
+    });
+
+    if (deleted) {
+      res.json({ message: 'Deleted Olivia from production DB.' });
+    } else {
+      res.status(404).json({ message: 'No such user found.' });
+    }
+  } catch (err) {
+    console.error('Error deleting user:', err);
+    res.status(500).json({ error: 'Failed to delete user' });
   }
 });
 
