@@ -5,11 +5,13 @@ import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
+import EditUserFormModal from './EditUserFormModal';
 import './Navigation.css';
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const ulRef = useRef();
 
   const toggleMenu = (e) => {
@@ -44,9 +46,17 @@ function ProfileButton({ user }) {
       <ul className={`profile-dropdown${showMenu ? '' : ' hidden'}`} ref={ulRef}>
         {user ? (
           <>
-            <li>{user.email}</li>
+            <li><strong>{user.name}</strong></li>
+            <li className="profile-role">{user.role}</li>
             <li>
-              <button className="profile-menu-btn" onClick={logout}>Log Out</button>
+              <button className="profile-menu-btn" onClick={() => setShowEditModal(true)}>
+                Edit Profile
+              </button>
+            </li>
+            <li>
+              <button className="profile-menu-btn" onClick={logout}>
+                Log Out
+              </button>
             </li>
           </>
         ) : (
@@ -64,6 +74,25 @@ function ProfileButton({ user }) {
           </>
         )}
       </ul>
+
+      {showEditModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <EditUserFormModal
+              userData={user}
+              onSubmit={(updatedUser) => {
+                dispatch(sessionActions.setSessionUser(updatedUser));
+                setShowEditModal(false);
+              }}
+              onCancel={() => setShowEditModal(false)}
+              onDelete={async () => {
+                await dispatch(sessionActions.logout());
+                window.location.href = '/';
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

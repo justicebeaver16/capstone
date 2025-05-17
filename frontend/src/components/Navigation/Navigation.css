@@ -176,3 +176,134 @@
     margin-top: 1rem;
   }
 }
+
+/* Edit User Form Modal */
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* Modal Content Wrapper */
+.modal-content {
+  background: #fff;
+  padding: 2rem;
+  max-width: 600px;
+  width: 90%;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+/* Form Container */
+.edit-vendor-form {
+  width: 100%;
+}
+
+.edit-vendor-form h1 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+.edit-vendor-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Form Grid */
+.edit-form-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.edit-form-grid label {
+  flex: 1 1 48%;
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+}
+
+.edit-form-grid label.full-width {
+  flex: 1 1 100%;
+}
+
+.edit-form-grid input,
+.edit-form-grid select,
+.edit-form-grid textarea {
+  padding: 0.6rem;
+  font-size: 0.95rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 0.4rem;
+}
+
+.edit-form-grid textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Error Messages */
+.edit-vendor-form span {
+  font-size: 0.85rem;
+  color: red;
+  margin-top: 0.3rem;
+}
+
+/* Buttons */
+.modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  justify-content: center;
+  margin-top: 1.2rem;
+}
+
+.modal-actions button {
+  padding: 0.8rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  min-width: 120px;
+}
+
+.edit-vendor-form button[type="submit"] {
+  background-color: #28a745;
+  color: white;
+}
+
+.modal-cancel-btn {
+  background-color: #ccc;
+  color: #333;
+}
+
+.modal-delete-btn {
+  background-color: #d32f2f;
+  color: white;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+  .edit-form-grid label {
+    flex: 1 1 100%;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .modal-actions button {
+    width: 100%;
+  }
+}

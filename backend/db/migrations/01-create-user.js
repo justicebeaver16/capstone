@@ -57,7 +57,13 @@ module.exports = {
       primaryEventId: {
         type: Sequelize.INTEGER,
         allowNull: true,
-        comment: 'Primary event this user is associated with'
+        comment: 'Primary event this user is associated with',
+        references: {
+          model: 'Events',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
       },
       resetPasswordToken: {
         type: Sequelize.STRING

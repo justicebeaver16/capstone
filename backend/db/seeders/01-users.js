@@ -1,18 +1,28 @@
-console.log('Running 01-users.js seeder...');
-
 'use strict';
 
-const { User } = require('../models');
 const bcrypt = require('bcryptjs');
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
-  options.schema = process.env.SCHEMA;  // define your schema in options object
+  options.schema = process.env.SCHEMA;
 }
 
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    await User.bulkCreate([
+  async up(queryInterface, Sequelize) {
+    await queryInterface.bulkInsert('Users', [
+{
+name: 'Olivia Martinez',
+email: 'olivia.martinez@example.com',
+password: bcrypt.hashSync('weddingready123', 10),
+avatar: 'default-bride.png',
+role: 'bride',
+eventRole: 'Bride',
+planningPermissions: 'full',
+isVendor: false,
+vendorId: null,
+createdAt: new Date(),
+updatedAt: new Date()
+},
       {
         name: 'Emily Rivera',
         email: 'emily.rivera@example.com',
@@ -23,9 +33,8 @@ module.exports = {
         planningPermissions: 'edit',
         isVendor: false,
         vendorId: null,
-        primaryEventId: 1,
-        resetPasswordToken: null,
-        resetPasswordExpire: null
+        createdAt: new Date(),
+        updatedAt: new Date()
       },
       {
         name: 'Sophia Kim',
@@ -37,9 +46,8 @@ module.exports = {
         planningPermissions: 'view',
         isVendor: false,
         vendorId: null,
-        primaryEventId: 1,
-        resetPasswordToken: null,
-        resetPasswordExpire: null
+        createdAt: new Date(),
+        updatedAt: new Date()
       },
       {
         name: 'Admin User',
@@ -51,9 +59,8 @@ module.exports = {
         planningPermissions: 'full',
         isVendor: false,
         vendorId: null,
-        primaryEventId: null,
-        resetPasswordToken: null,
-        resetPasswordExpire: null
+        createdAt: new Date(),
+        updatedAt: new Date()
       },
       {
         name: 'Jane Smith',
@@ -65,9 +72,8 @@ module.exports = {
         planningPermissions: 'full',
         isVendor: false,
         vendorId: null,
-        primaryEventId: 1,
-        resetPasswordToken: null,
-        resetPasswordExpire: null
+        createdAt: new Date(),
+        updatedAt: new Date()
       },
       {
         name: 'John Doe',
@@ -79,9 +85,8 @@ module.exports = {
         planningPermissions: 'full',
         isVendor: false,
         vendorId: null,
-        primaryEventId: 1,
-        resetPasswordToken: null,
-        resetPasswordExpire: null
+        createdAt: new Date(),
+        updatedAt: new Date()
       },
       {
         name: 'Sarah Williams',
@@ -93,9 +98,8 @@ module.exports = {
         planningPermissions: 'full',
         isVendor: false,
         vendorId: null,
-        primaryEventId: 1,
-        resetPasswordToken: null,
-        resetPasswordExpire: null
+        createdAt: new Date(),
+        updatedAt: new Date()
       },
       {
         name: 'Emily Johnson',
@@ -107,9 +111,8 @@ module.exports = {
         planningPermissions: 'edit',
         isVendor: false,
         vendorId: null,
-        primaryEventId: 1,
-        resetPasswordToken: null,
-        resetPasswordExpire: null
+        createdAt: new Date(),
+        updatedAt: new Date()
       },
       {
         name: 'Mike Thompson',
@@ -121,9 +124,8 @@ module.exports = {
         planningPermissions: 'view',
         isVendor: false,
         vendorId: null,
-        primaryEventId: 1,
-        resetPasswordToken: null,
-        resetPasswordExpire: null
+        createdAt: new Date(),
+        updatedAt: new Date()
       },
       {
         name: 'Lisa Davis',
@@ -135,9 +137,8 @@ module.exports = {
         planningPermissions: 'none',
         isVendor: false,
         vendorId: null,
-        primaryEventId: 1,
-        resetPasswordToken: null,
-        resetPasswordExpire: null
+        createdAt: new Date(),
+        updatedAt: new Date()
       },
       {
         name: 'Catering Services',
@@ -149,9 +150,8 @@ module.exports = {
         planningPermissions: 'none',
         isVendor: true,
         vendorId: 1,
-        primaryEventId: 1,
-        resetPasswordToken: null,
-        resetPasswordExpire: null
+        createdAt: new Date(),
+        updatedAt: new Date()
       },
       {
         name: 'Photography Studio',
@@ -163,9 +163,8 @@ module.exports = {
         planningPermissions: 'none',
         isVendor: true,
         vendorId: 2,
-        primaryEventId: 1,
-        resetPasswordToken: null,
-        resetPasswordExpire: null
+        createdAt: new Date(),
+        updatedAt: new Date()
       },
       {
         name: 'Regular User',
@@ -177,11 +176,10 @@ module.exports = {
         planningPermissions: 'none',
         isVendor: false,
         vendorId: null,
-        primaryEventId: null,
-        resetPasswordToken: null,
-        resetPasswordExpire: null
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
-    ], { validate: true });
+    ], options);
   },
 
   async down(queryInterface, Sequelize) {
@@ -193,7 +191,6 @@ module.exports = {
         [Op.in]: [
           'emily.rivera@example.com',
           'sophia.kim@example.com',
-          'admin@example.com',
           'admin@example.com',
           'bride@example.com',
           'groom@example.com',

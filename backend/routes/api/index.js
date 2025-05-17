@@ -31,7 +31,8 @@ router.use('/dashboard', dashboardRouter);
 
 // App feature routes
 router.use('/auth', authRoutes);
-router.use('/user', userRoutes);
+// router.use('/user', userRoutes);
+router.use('/users', userRoutes);
 router.use('/events', eventRoutes);
 router.use('/moodboard', moodboardRoutes);
 router.use('/vendors', vendorRoutes);

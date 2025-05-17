@@ -1,161 +1,212 @@
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { Navigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+import EditEventFormModal from './EditEventFormModal';
+import CreateEventFormModal from './CreateEventFormModal';
 import './Dashboard.css';
 
 const Dashboard = () => {
   const sessionUser = useSelector((state) => state.session.user);
-  const [eventData, setEventData] = useState(null);
-  const [guestList, setGuestList] = useState([]);
-  const [seatingPreview, setSeatingPreview] = useState('');
-  const [tasks, setTasks] = useState([]);
-  const [photos, setPhotos] = useState([]);
-  const [vendors, setVendors] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [activeEvent, setActiveEvent] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!sessionUser) return;
 
     const fetchDashboardData = async () => {
       try {
-        const [
-          eventRes,
-          guestsRes,
-          seatingRes,
-          tasksRes,
-          photosRes,
-          vendorsRes
-        ] = await Promise.all([
-          fetch('/api/dashboard/event-overview'),
-          fetch('/api/dashboard/guestlist-preview'),
-          fetch('/api/dashboard/seating-preview'),
-          fetch('/api/dashboard/tasks-preview'),
-          fetch('/api/dashboard/photos-preview'),
-          fetch('/api/dashboard/vendors-preview')
-        ]);
+        const res = await fetch('/api/events/current');
+        if (!res.ok) throw new Error('Failed to fetch events');
+        const data = await res.json();
 
-        const event = await eventRes.json();
-        const guests = await guestsRes.json();
+        const enrichedEvents = await Promise.all(
+          (data.Events || []).map(async (event) => {
+            const [vendorsRes, guestsRes, tasksRes] = await Promise.all([
+              fetch(`/api/vendors/${event.id}`),
+              fetch(`/api/guestlist/${event.id}`),
+              fetch(`/api/schedule/${event.id}`)
+            ]);
 
-        let seatingPreviewText = 'You do not have access to view seating.';
-        if (seatingRes.ok) {
-          const seating = await seatingRes.json();
-          seatingPreviewText = seating?.preview || 'No seating chart set up yet.';
-        }
+            const vendors = vendorsRes.ok ? await vendorsRes.json() : [];
+            const guests = guestsRes.ok ? (await guestsRes.json()).Guests || [] : [];
+            const tasks = tasksRes.ok ? (await tasksRes.json()).Schedule || [] : [];
 
-        const tasksData = await tasksRes.json();
-        const photosData = await photosRes.json();
-        if (vendorsRes.ok) {
-          const vendorsData = await vendorsRes.json();
-          setVendors(Array.isArray(vendorsData) ? vendorsData : []);
-        } else {
-          console.error('Failed to load vendors preview');
-        }
+            return { ...event, vendors, guests, tasks };
+          })
+        );
 
-        setEventData(event);
-        setGuestList(Array.isArray(guests) ? guests : []);
-        setSeatingPreview(seatingPreviewText);
-        setTasks(Array.isArray(tasksData) ? tasksData : []);
-        setPhotos(Array.isArray(photosData) ? photosData : []);
+        setEvents(enrichedEvents);
       } catch (error) {
-        console.error('Error fetching dashboard data:', error);
+        console.error('Dashboard fetch error:', error);
       }
     };
 
     fetchDashboardData();
   }, [sessionUser]);
 
+  const handleCloseModal = () => {
+    setShowEditModal(false);
+    setShowCreateModal(false);
+    setActiveEvent(null);
+    setTimeout(() => setMessage(''), 3000);
+  };
+
   if (!sessionUser) return <Navigate to="/login" replace />;
-  if (!eventData) return <p>Loading your event dashboard...</p>;
 
   return (
     <div className="dashboard-container">
       <h1>Welcome, {sessionUser.name}</h1>
 
+      {message && <div className="confirmation-message">{message}</div>}
+
+      {['full', 'edit'].includes(sessionUser?.planningPermissions) && (
+        <div className="dashboard-actions">
+          <button onClick={() => setShowCreateModal(true)} className="dashboard-link-button">
+            Create New Event
+          </button>
+        </div>
+      )}
+
       <div className="dashboard-grid">
-        <section className="dashboard-section">
-          <h2>Event Overview</h2>
-          <p><strong>Event:</strong> {eventData?.name || 'Unnamed Event'}</p>
-          <p><strong>Date:</strong> {eventData?.date || 'TBD'}</p>
-          <p><strong>Location:</strong> {eventData?.location || 'Not set'}</p>
-          <p><strong>Status:</strong> {eventData?.status || 'Unknown'}</p>
-          <Link to="/dashboard" className="dashboard-link-button">Edit Event</Link>
-        </section>
+        {events.length > 0 ? events.map((event) => (
+          <div className="event-card" key={event.id}>
+            <section className="dashboard-section">
+              <h2>{event.title}</h2>
+              <p><strong>Date:</strong> {event.date?.split('T')[0] || 'TBD'}</p>
+              <p><strong>Location:</strong> {`${event.address || ''}, ${event.city || ''}, ${event.state || ''} ${event.zipCode || ''}`}</p>
+              <p><strong>Status:</strong> {event.status || 'Unknown'}</p>
+              {['full', 'edit'].includes(sessionUser?.planningPermissions) && (
+                <button onClick={() => { setActiveEvent(event); setShowEditModal(true); }} className="dashboard-link-button">
+                  Edit Event
+                </button>
+              )}
+            </section>
 
-        <section className="dashboard-section">
-          <h2>Guest List Preview</h2>
-          {guestList.length > 0 ? (
-            <ul>
-              {guestList.map((guest) => (
-                <li key={guest.id}>{guest.name}</li>
-              ))}
-            </ul>
-          ) : (
-            <p>No guests yet.</p>
-          )}
-          <Link to="/guest-list" className="dashboard-link-button">Edit Guest List</Link>
-        </section>
+            <section className="dashboard-section">
+              <h3>Guest List</h3>
+              {event.guests && event.guests.length > 0 ? (
+                <ul>
+                  {event.guests.map(guest => (
+                    <li key={guest.id}>{guest.name}</li>
+                  ))}
+                </ul>
+              ) : <p>No guests yet.</p>}
+              <a href="/guest-list" className="dashboard-link-button">Edit Guest List</a>
+            </section>
 
-        <section className="dashboard-section">
-          <h2>Seating Chart Preview</h2>
-          <p>{seatingPreview}</p>
-          <Link to="/seating" className="dashboard-link-button">View Seating Chart</Link>
-        </section>
+            <section className="dashboard-section">
+              <h3>Tasks</h3>
+              {event.tasks && event.tasks.length > 0 ? (
+                <ul>
+                  {event.tasks.map(task => (
+                    <li key={task.id}>{task.title}</li>
+                  ))}
+                </ul>
+              ) : <p>No tasks yet.</p>}
+              <a href="/tasks" className="dashboard-link-button">Edit Tasks</a>
+            </section>
 
-        <section className="dashboard-section">
-          <h2>Tasks To Do</h2>
-          {tasks.length > 0 ? (
-            <ul>
-              {tasks.map((task) => (
-                <li key={task.id}>
-                  {task.title}
-                  {task.Member && (
-                    <span style={{ fontSize: '0.9em', color: '#666' }}>
-                      {' '}– assigned to {task.Member.name} ({task.Member.role})
-                    </span>
-                  )}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No tasks yet.</p>
-          )}
-          <Link to="/tasks" className="dashboard-link-button">Edit Tasks</Link>
-        </section>
+            <section className="dashboard-section">
+  <h3>Vendors</h3>
+  {event.vendors && event.vendors.length > 0 ? (
+    <ul>
+      {event.vendors.map(vendor => (
+        <li key={vendor.id}>
+          {vendor.name} – {vendor.category} [{vendor.status}]
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p>No vendors added yet.</p>
+  )}
+  <button
+  className="dashboard-link-button"
+  onClick={() => navigate('/vendors')}
+>
+  View Vendors
+</button>
+</section>
 
-        <section className="dashboard-section">
-          <h2>Vendors</h2>
-          {vendors.length > 0 ? (
-            <ul>
-              {vendors.map((vendor) => (
-                <li key={vendor.id}>
-                  {vendor.name} – {vendor.category} [{vendor.status}]
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No vendors added yet.</p>
-          )}
-          <Link to="/vendors" className="dashboard-link-button">View Vendors</Link>
-        </section>
-
-        <section className="dashboard-section">
-          <h2>Photo Album Preview</h2>
-          {photos.length > 0 ? (
-            <div className="photo-preview">
-              {photos.map((photo) => (
-                <img
-                  key={photo.id}
-                  src={photo.imageUrl}
-                  alt={photo.description || 'Event photo'}
-                />
-              ))}
-            </div>
-          ) : (
-            <p>No photos yet.</p>
-          )}
-          <Link to="/photo-album" className="dashboard-link-button">View Photo Album</Link>
-        </section>
+          </div>
+        )) : <p>No events yet.</p>}
       </div>
+
+      {showEditModal && activeEvent && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <EditEventFormModal
+              key={activeEvent.id}
+              eventData={activeEvent}
+              onSubmit={async (updatedData) => {
+                try {
+                  const csrfToken = document.cookie
+                    .split('; ')
+                    .find(row => row.startsWith('XSRF-TOKEN='))
+                    ?.split('=')[1];
+
+                  const res = await fetch(`/api/events/${activeEvent.id}`, {
+                    method: 'PUT',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'X-CSRF-Token': csrfToken
+                    },
+                    body: JSON.stringify(updatedData)
+                  });
+
+                  if (res.ok) {
+                    const updated = await res.json();
+                    setEvents(events.map(ev => ev.id === updated.id ? { ...ev, ...updated } : ev));
+                    setMessage('Event successfully updated!');
+                    handleCloseModal();
+                  } else {
+                    console.error('Failed to update event.');
+                  }
+                } catch (err) {
+                  console.error('Update error:', err);
+                }
+              }}
+              onCancel={handleCloseModal}
+              onDelete={async () => {
+                try {
+                  const res = await fetch(`/api/events/${activeEvent.id}`, {
+                    method: 'DELETE'
+                  });
+
+                  if (res.ok) {
+                    setEvents(events.filter(ev => ev.id !== activeEvent.id));
+                    setMessage('Event successfully deleted.');
+                    handleCloseModal();
+                  } else {
+                    console.error('Failed to delete event.');
+                  }
+                } catch (err) {
+                  console.error('Delete error:', err);
+                }
+              }}
+            />
+          </div>
+        </div>
+      )}
+
+      {showCreateModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <CreateEventFormModal
+              onSubmit={(newEvent) => {
+                setEvents([...events, newEvent]);
+                setMessage('Event successfully created!');
+                handleCloseModal();
+              }}
+              onCancel={handleCloseModal}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

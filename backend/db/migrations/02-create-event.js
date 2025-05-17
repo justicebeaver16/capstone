@@ -50,9 +50,9 @@ module.exports = {
         type: Sequelize.ENUM('planning', 'upcoming', 'completed', 'cancelled'),
         defaultValue: 'planning'
       },
-      UserId: { // foreign key for Event.belongsTo(models.User)
+      UserId: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
           model: 'Users',
           key: 'id'

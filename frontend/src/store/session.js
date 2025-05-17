@@ -14,6 +14,9 @@ export const removeSessionUser = () => ({
   type: REMOVE_SESSION_USER,
 });
 
+// Optional reusable setter for components (e.g. after user edit)
+export const setUser = (user) => setSessionUser(user);
+
 // Thunk Actions
 
 export const login = (credential, password) => async (dispatch) => {
@@ -28,17 +31,19 @@ export const login = (credential, password) => async (dispatch) => {
 };
 
 export const signup = (user) => async (dispatch) => {
-  const { username, firstName, lastName, email, password } = user;
+  const { firstName, lastName, email, password, eventId } = user;
+
   const response = await csrfFetch('/api/users', {
     method: 'POST',
     body: JSON.stringify({
-      username,
       firstName,
       lastName,
       email,
       password,
+      eventId,
     }),
   });
+
   const data = await response.json();
   dispatch(setSessionUser(data.user));
   return response;

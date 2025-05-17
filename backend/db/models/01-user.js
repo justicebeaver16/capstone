@@ -3,13 +3,18 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 class User extends Model {
-  // Define associations
   static associate(models) {
-    User.hasMany(models.Event);
-    User.hasMany(models.Photo);
+    User.hasMany(models.Event, { foreignKey: 'UserId' });
+    User.hasMany(models.Photo, {
+  foreignKey: 'uploadedById',
+  as: 'uploadedPhotos'
+});
+    User.belongsTo(models.Event, {
+      foreignKey: 'primaryEventId',
+      as: 'primaryEvent'
+    });
   }
 
-  // Instance methods
   async matchPassword(enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
   }
@@ -89,12 +94,15 @@ module.exports = (sequelize) => {
     },
     vendorId: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      comment: 'Reference to vendor table if user is associated with vendor'
+      allowNull: true
     },
     primaryEventId: {
       type: DataTypes.INTEGER,
       allowNull: true,
+      references: {
+        model: 'Events',
+        key: 'id'
+      },
       comment: 'Primary event this user is associated with'
     },
     resetPasswordToken: {

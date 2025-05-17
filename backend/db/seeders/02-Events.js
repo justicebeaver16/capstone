@@ -7,8 +7,15 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    const now = new Date();
+    const users = await queryInterface.sequelize.query(
+      `SELECT id, email FROM "Users" ORDER BY id ASC;`
+    );
+    const userMap = users[0].reduce((acc, user) => {
+      acc[user.email] = user.id;
+      return acc;
+    }, {});
 
+    const now = new Date();
     const events = [
       {
         title: 'Miller-Johnson Wedding Ceremony',
@@ -22,8 +29,7 @@ module.exports = {
         description: 'Outdoor ceremony at the Rose Garden with family and friends.',
         eventType: 'wedding',
         status: 'upcoming',
-        createdAt: now,
-        updatedAt: now
+        UserId: userMap['olivia.martinez@example.com']
       },
       {
         title: 'Miller-Johnson Wedding Reception',
@@ -37,8 +43,7 @@ module.exports = {
         description: 'Formal reception with dining, dancing, and speeches.',
         eventType: 'reception',
         status: 'planning',
-        createdAt: now,
-        updatedAt: now
+        UserId: userMap['bride@example.com']
       },
       {
         title: 'Clark Anniversary Celebration',
@@ -50,8 +55,7 @@ module.exports = {
         description: 'Celebration of 10 years of love and commitment.',
         eventType: 'anniversary',
         status: 'planning',
-        createdAt: now,
-        updatedAt: now
+        UserId: userMap['bride@example.com']
       },
       {
         title: 'Thompson-Garcia Engagement Party',
@@ -63,8 +67,7 @@ module.exports = {
         description: 'An intimate engagement party with close friends.',
         eventType: 'engagement',
         status: 'upcoming',
-        createdAt: now,
-        updatedAt: now
+        UserId: userMap['bride@example.com']
       },
       {
         title: 'Wilson Corporate Gala',
@@ -76,8 +79,7 @@ module.exports = {
         description: 'Annual gala event for corporate partners and clients.',
         eventType: 'corporate',
         status: 'planning',
-        createdAt: now,
-        updatedAt: now
+        UserId: userMap['bride@example.com']
       },
       {
         title: 'Taylor Bridal Shower',
@@ -89,16 +91,21 @@ module.exports = {
         description: 'Garden-style bridal shower for Taylor and guests.',
         eventType: 'bridal-shower',
         status: 'upcoming',
-        createdAt: now,
-        updatedAt: now
+        UserId: userMap['bride@example.com']
       }
     ];
 
-    return queryInterface.bulkInsert('Events', events, options);
+    const eventsToInsert = events.map((event) => ({
+      ...event,
+      createdAt: now,
+      updatedAt: now
+    }));
+
+    await queryInterface.bulkInsert('Events', eventsToInsert, options);
   },
 
   async down(queryInterface, Sequelize) {
     options.tableName = 'Events';
-    return queryInterface.bulkDelete(options, null, {});
+    return queryInterface.bulkDelete(options, null, options);
   }
 };

@@ -2,12 +2,18 @@ const { Model, DataTypes } = require('sequelize');
 
 class Event extends Model {
   static associate(models) {
-    Event.hasMany(models.Guest);
-    Event.belongsTo(models.User);
-    Event.hasMany(models.Vendor);
-    Event.hasMany(models.MoodBoard);
-    Event.hasOne(models.EventParty);
-    Event.hasMany(models.Photo);
+    Event.belongsTo(models.User, {
+      foreignKey: 'UserId',
+      as: 'creator'
+    });
+
+    Event.hasMany(models.Guest, { foreignKey: 'EventId' });
+    Event.hasMany(models.Vendor, { foreignKey: 'EventId' });
+    Event.hasMany(models.MoodBoard, { foreignKey: 'EventId' });
+    Event.hasMany(models.Photo, { foreignKey: 'EventId' });
+    Event.hasMany(models.Task, { foreignKey: 'EventId' });
+    Event.hasMany(models.Table, { foreignKey: 'EventId' });
+    Event.hasOne(models.EventParty, { foreignKey: 'EventId' });
   }
 }
 
@@ -48,6 +54,15 @@ module.exports = (sequelize) => {
     status: {
       type: DataTypes.ENUM('planning', 'upcoming', 'completed', 'cancelled'),
       defaultValue: 'planning'
+    },
+    UserId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Users',
+        key: 'id'
+      },
+      onDelete: 'CASCADE'
     }
   }, {
     sequelize,

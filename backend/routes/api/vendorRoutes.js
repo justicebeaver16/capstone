@@ -6,6 +6,7 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 const router = express.Router();
 
+// Validation middleware
 const validateVendor = [
   check('name')
     .exists({ checkFalsy: true })
@@ -19,7 +20,7 @@ const validateVendor = [
   handleValidationErrors
 ];
 
-// Get all vendors for the current user's primary event
+// GET /api/vendors — All vendors for current user's primary event
 router.get('/', requireAuth, async (req, res) => {
   try {
     const vendors = await Vendor.findAll({
@@ -32,7 +33,26 @@ router.get('/', requireAuth, async (req, res) => {
   }
 });
 
-// Add a new vendor
+// GET /api/vendors/:eventId — All vendors for a specific event
+router.get('/:eventId', requireAuth, async (req, res) => {
+  const eventId = parseInt(req.params.eventId);
+  if (isNaN(eventId)) {
+    return res.status(400).json({ message: 'Invalid event ID' });
+  }
+
+  try {
+    const vendors = await Vendor.findAll({
+      where: { EventId: eventId },
+      include: [{ model: VendorAttachment }]
+    });
+
+    res.json(vendors);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch vendors for event', error: err.message });
+  }
+});
+
+// POST /api/vendors — Create a new vendor
 router.post('/', requireAuth, validateVendor, async (req, res) => {
   if (!['edit', 'full'].includes(req.user.planningPermissions)) {
     return res.status(403).json({ message: 'You do not have permission to add vendors.' });
@@ -46,12 +66,14 @@ router.post('/', requireAuth, validateVendor, async (req, res) => {
   }
 });
 
-// Update a vendor
+// PUT /api/vendors/:vendorId — Update a vendor
 router.put('/:vendorId', requireAuth, validateVendor, async (req, res) => {
   try {
     const vendor = await Vendor.findByPk(req.params.vendorId);
 
-    if (!vendor) return res.status(404).json({ message: "Vendor couldn't be found" });
+    if (!vendor) {
+      return res.status(404).json({ message: "Vendor couldn't be found" });
+    }
 
     if (
       vendor.EventId !== req.user.primaryEventId ||
@@ -67,12 +89,14 @@ router.put('/:vendorId', requireAuth, validateVendor, async (req, res) => {
   }
 });
 
-// Delete a vendor
+// DELETE /api/vendors/:vendorId — Delete a vendor
 router.delete('/:vendorId', requireAuth, async (req, res) => {
   try {
     const vendor = await Vendor.findByPk(req.params.vendorId);
 
-    if (!vendor) return res.status(404).json({ message: "Vendor couldn't be found" });
+    if (!vendor) {
+      return res.status(404).json({ message: "Vendor couldn't be found" });
+    }
 
     if (
       vendor.EventId !== req.user.primaryEventId ||

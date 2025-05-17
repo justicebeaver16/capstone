@@ -1,15 +1,16 @@
 const express = require('express');
-const { Event } = require('../../db/models');
+const { Event, User } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const router = express.Router();
 
+// Validation middleware for event
 const validateEvent = [
-  check('name')
+  check('title')
     .exists({ checkFalsy: true })
-    .withMessage('Event name is required'),
+    .withMessage('Event title is required'),
   check('date')
     .exists({ checkFalsy: true })
     .isDate()
@@ -17,33 +18,45 @@ const validateEvent = [
   handleValidationErrors
 ];
 
-// Create an event
+// Create a new event
 router.post('/', requireAuth, validateEvent, async (req, res) => {
-  const { name, date, description, location } = req.body;
+  const { title, date, description, address, city, state, zipCode, eventType, status } = req.body;
+
   try {
     const event = await Event.create({
-      userId: req.user.id,
-      name,
+      title,
       date,
       description,
-      location
+      address,
+      city,
+      state,
+      zipCode,
+      eventType,
+      status,
+      UserId: req.user.id
     });
+
+    if (!req.user.primaryEventId) {
+      await req.user.update({ primaryEventId: event.id });
+    }
 
     res.status(201).json(event);
   } catch (err) {
+    console.error('Event creation error:', err);
     res.status(500).json({ message: 'Failed to create event', error: err.message });
   }
 });
 
-// Get all events for current user
+// Get current user's events
 router.get('/current', requireAuth, async (req, res) => {
   try {
     const events = await Event.findAll({
-      where: { userId: req.user.id }
+      where: { UserId: req.user.id },
+      order: [['date', 'ASC']]
     });
-
     res.json({ Events: events });
   } catch (err) {
+    console.error('Failed to fetch current user events:', err);
     res.status(500).json({ message: 'Failed to fetch events', error: err.message });
   }
 });
@@ -54,7 +67,7 @@ router.get('/:id', requireAuth, async (req, res) => {
     const event = await Event.findByPk(req.params.id);
 
     if (!event) return res.status(404).json({ message: "Event couldn't be found" });
-    if (event.userId !== req.user.id) return res.status(403).json({ message: 'Forbidden' });
+    if (event.UserId !== req.user.id) return res.status(403).json({ message: 'Forbidden' });
 
     res.json(event);
   } catch (err) {
@@ -68,11 +81,35 @@ router.put('/:id', requireAuth, validateEvent, async (req, res) => {
     const event = await Event.findByPk(req.params.id);
 
     if (!event) return res.status(404).json({ message: "Event couldn't be found" });
-    if (event.userId !== req.user.id) return res.status(403).json({ message: 'Forbidden' });
+    if (event.UserId !== req.user.id) return res.status(403).json({ message: 'Forbidden' });
 
-    await event.update(req.body);
+    const {
+      title,
+      date,
+      description,
+      address,
+      city,
+      state,
+      zipCode,
+      eventType,
+      status
+    } = req.body;
+
+    await event.update({
+      title,
+      date,
+      description,
+      address,
+      city,
+      state,
+      zipCode,
+      eventType,
+      status
+    });
+
     res.json(event);
   } catch (err) {
+    console.error('Update error:', err);
     res.status(500).json({ message: 'Error updating event', error: err.message });
   }
 });
@@ -83,7 +120,7 @@ router.delete('/:id', requireAuth, async (req, res) => {
     const event = await Event.findByPk(req.params.id);
 
     if (!event) return res.status(404).json({ message: "Event couldn't be found" });
-    if (event.userId !== req.user.id) return res.status(403).json({ message: 'Forbidden' });
+    if (event.UserId !== req.user.id) return res.status(403).json({ message: 'Forbidden' });
 
     await event.destroy();
     res.json({ message: 'Successfully deleted' });
