@@ -29,6 +29,14 @@ router.post('/', validateLogin, async (req, res, next) => {
     },
   });
 
+  if (!user) {
+    console.log('No user found for:', credential);
+  } else {
+    console.log('User found:', user.email);
+    console.log('Stored hash:', user.password);
+    console.log('Compare result:', bcrypt.compareSync(password, user.password));
+  }
+
   if (!user || !bcrypt.compareSync(password, user.password)) {
     const err = new Error('Login failed');
     err.status = 401;
@@ -50,6 +58,36 @@ router.post('/', validateLogin, async (req, res, next) => {
 
   return res.json({ user: safeUser });
 });
+// router.post('/', validateLogin, async (req, res, next) => {
+//   const { credential, password } = req.body;
+
+//   const user = await User.unscoped().findOne({
+//     where: {
+//       email: credential,
+//     },
+//   });
+
+//   if (!user || !bcrypt.compareSync(password, user.password)) {
+//     const err = new Error('Login failed');
+//     err.status = 401;
+//     err.title = 'Login failed';
+//     err.errors = { credential: 'The provided credentials were invalid.' };
+//     return next(err);
+//   }
+
+//   const safeUser = {
+//     id: user.id,
+//     email: user.email,
+//     name: user.name,
+//     role: user.role,
+//     planningPermissions: user.planningPermissions,
+//     primaryEventId: user.primaryEventId,
+//   };
+
+//   await setTokenCookie(res, safeUser);
+
+//   return res.json({ user: safeUser });
+// });
 
 // Logout route
 router.delete('/', (_req, res) => {
