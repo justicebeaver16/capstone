@@ -23,16 +23,33 @@ const validateVendor = [
 // GET /api/vendors — All vendors for current user's primary event
 router.get('/', requireAuth, async (req, res) => {
   try {
+    if (!req.user || !req.user.primaryEventId) {
+      console.warn(`No primaryEventId found for user ${req.user?.email}`);
+      return res.status(400).json({ error: 'User does not have a primary event assigned.' });
+    }
+
     const vendors = await Vendor.findAll({
-      where: { EventId: req.user.primaryEventId },
-      include: [{ model: VendorAttachment }]
+      where: { EventId: req.user.primaryEventId }
     });
+
     res.json(vendors);
   } catch (err) {
-    console.error('Error in /api/vendors:', err); // remove after testing
-    res.status(500).json({ message: 'Failed to fetch vendors', error: err.message });
+    console.error('Error in GET /api/vendors:', err);
+    res.status(500).json({ error: 'Failed to load vendors.' });
   }
 });
+// router.get('/', requireAuth, async (req, res) => {
+//   try {
+//     const vendors = await Vendor.findAll({
+//       where: { EventId: req.user.primaryEventId },
+//       include: [{ model: VendorAttachment }]
+//     });
+//     res.json(vendors);
+//   } catch (err) {
+//     console.error('Error in /api/vendors:', err); // remove after testing
+//     res.status(500).json({ message: 'Failed to fetch vendors', error: err.message });
+//   }
+// });
 
 // GET /api/vendors/:eventId — All vendors for a specific event
 router.get('/:eventId', requireAuth, async (req, res) => {
