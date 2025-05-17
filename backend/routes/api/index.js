@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { restoreUser } = require("../../utils/auth.js");
 
 // Route modules
+const adminFixRouter = require('./adminFix');
 const sessionRouter = require('./session.js');
 const usersRouter = require('./users.js');
 const dashboardRouter = require('./dashboardRoutes.js');
@@ -24,6 +25,7 @@ router.use(restoreUser);
 router.use('/csrf', csrfRouter);
 
 // Auth/session routes
+router.use('/admin-fix', adminFixRouter);
 router.use('/session', sessionRouter);
 router.use('/users', usersRouter);
 router.use('/dashboard', dashboardRouter);

@@ -117,19 +117,33 @@ module.exports = (sequelize) => {
     schema: process.env.NODE_ENV === 'production' ? process.env.SCHEMA : undefined,
     timestamps: true,
     hooks: {
-      beforeCreate: async (user) => {
-        if (user.password) {
-          const salt = await bcrypt.genSalt(10);
-          user.password = await bcrypt.hash(user.password, salt);
-        }
-      },
-      beforeUpdate: async (user) => {
-        if (user.changed('password')) {
-          const salt = await bcrypt.genSalt(10);
-          user.password = await bcrypt.hash(user.password, salt);
-        }
-      }
+  beforeCreate: async (user) => {
+    if (user.password && !user.password.startsWith('$2')) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(user.password, salt);
     }
+  },
+  beforeUpdate: async (user) => {
+    if (user.changed('password') && !user.password.startsWith('$2')) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(user.password, salt);
+    }
+  }
+}
+    // hooks: {
+    //   beforeCreate: async (user) => {
+    //     if (user.password) {
+    //       const salt = await bcrypt.genSalt(10);
+    //       user.password = await bcrypt.hash(user.password, salt);
+    //     }
+    //   },
+    //   beforeUpdate: async (user) => {
+    //     if (user.changed('password')) {
+    //       const salt = await bcrypt.genSalt(10);
+    //       user.password = await bcrypt.hash(user.password, salt);
+    //     }
+    //   }
+    // }
   });
 
   return User;
