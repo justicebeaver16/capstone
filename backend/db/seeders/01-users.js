@@ -226,26 +226,27 @@ if (process.env.NODE_ENV === 'production') {
 module.exports = {
   async up(queryInterface, Sequelize) {
     const now = new Date();
-  const Op = Sequelize.Op;
+    const Op = Sequelize.Op;
 
-  // Clean up existing users with conflicting emails
-  await queryInterface.bulkDelete('Users', {
-    email: {
-      [Op.in]: [
-        'olivia.martinez@example.com',
-        'emily.rivera@example.com',
-        'sophia.kim@example.com',
-        'admin@example.com',
-        'planner@example.com',
-        'maid@example.com',
-        'bestman@example.com',
-        'bridesmaid@example.com',
-        'catering@example.com',
-        'photo@example.com',
-        'user@example.com'
-      ]
-    }
-  }, {});
+    // Clean up existing users with conflicting emails
+    await queryInterface.bulkDelete('Users', {
+      email: {
+        [Op.in]: [
+          'olivia.martinez@example.com',
+          'emily.rivera@example.com',
+          'sophia.kim@example.com',
+          'admin@example.com',
+          'planner@example.com',
+          'maid@example.com',
+          'bestman@example.com',
+          'bridesmaid@example.com',
+          'catering@example.com',
+          'photo@example.com',
+          'user@example.com'
+        ]
+      }
+    }, {});
+    
     await queryInterface.bulkInsert('Users', [
 {
 name: 'Olivia Martinez',
