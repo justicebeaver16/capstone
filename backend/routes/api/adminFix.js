@@ -5,7 +5,7 @@ const { User } = require('../../db/models');
 const router = express.Router();
 
 // TEMP: Bulk insert seeded users into production DB
-router.post('/run-user-seeds', async (req, res) => {
+router.get('/run-user-seeds', async (req, res) => {
   try {
     const users = [
       {
