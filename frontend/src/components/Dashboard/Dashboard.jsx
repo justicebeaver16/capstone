@@ -181,8 +181,17 @@ const Dashboard = () => {
               onCancel={handleCloseModal}
               onDelete={async () => {
   try {
+    const csrfToken = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('XSRF-TOKEN='))
+      ?.split('=')[1];
+
     const res = await fetch(`/api/events/${activeEvent.id}`, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken
+      }
     });
 
     const data = await res.json();
