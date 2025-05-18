@@ -60,16 +60,16 @@ module.exports = {
       qrCode: {
         type: Sequelize.STRING
       },
-      eventId: { // Foreign key to Events table
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Events',
-          key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-      },
+      EventId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'Events',
+      key: 'id'
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE'
+  },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
