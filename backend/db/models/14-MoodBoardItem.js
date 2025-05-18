@@ -41,7 +41,13 @@ module.exports = (sequelize) => {
     height: {
       type: DataTypes.INTEGER,
       defaultValue: 200
-    }
+    },
+    MoodBoardId: { // Foreign key to MoodBoards table
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
   }, {
     sequelize,
     modelName: 'MoodBoardItem',
