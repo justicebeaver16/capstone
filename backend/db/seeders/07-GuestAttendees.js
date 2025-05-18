@@ -10,14 +10,14 @@ module.exports = {
     const now = new Date();
 
     const Guests = await queryInterface.sequelize.query(
-      `SELECT id, primaryName FROM "Guests"`,
-      { type: Sequelize.QueryTypes.SELECT }
-    );
+  `SELECT id, primaryName FROM Guests`,
+  { type: Sequelize.QueryTypes.SELECT }
+);
 
-    const getGuestId = (name) => {
-      const match = Guests.find(g => g.primaryName === name);
-      return match ? match.id : null;
-    };
+    const getGuestId = (primaryName) => {
+  const match = Guests.find(g => g.primaryName === primaryName);
+  return match ? match.id : null;
+};
 
     const attendees = [
       {
@@ -47,7 +47,8 @@ module.exports = {
       console.warn('No GuestAttendees to insert. Skipping...');
       return;
     }
-
+console.log('GuestAttendee rows to insert:', attendees);
+console.log('Target table:', options.tableName || 'GuestAttendees');
     return queryInterface.bulkInsert('GuestAttendees', attendees, options);
   },
 
