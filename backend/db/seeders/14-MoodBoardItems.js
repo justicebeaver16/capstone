@@ -35,7 +35,7 @@ module.exports = {
         positionY: 100,
         width: 300,
         height: 250,
-        MoodBoardId: getMoodBoardId('Ceremony Inspiration'),
+        moodBoardId: getMoodBoardId('Ceremony Inspiration'),
         createdAt: now,
         updatedAt: now
       },
@@ -49,7 +49,7 @@ module.exports = {
         positionY: 0,
         width: 200,
         height: 150,
-        MoodBoardId: getMoodBoardId('Reception Decor Board'),
+        moodBoardId: getMoodBoardId('Reception Decor Board'),
         createdAt: now,
         updatedAt: now
       },
@@ -63,14 +63,14 @@ module.exports = {
         positionY: 80,
         width: 400,
         height: 150,
-        MoodBoardId: getMoodBoardId('Gala Mood Board'),
+        moodBoardId: getMoodBoardId('Gala Mood Board'),
         createdAt: now,
         updatedAt: now
       }
     ];
 
     // Filter out invalid entries
-    moodBoardItems = moodBoardItems.filter(item => item.MoodBoardId);
+    moodBoardItems = moodBoardItems.filter(item => item.moodBoardId);
 
     if (!moodBoardItems.length) {
       console.warn('No MoodBoardItems to insert. Skipping...');
@@ -79,7 +79,7 @@ module.exports = {
 
     console.log('Resolved MoodBoardItems:', moodBoardItems.map(i => ({
       type: i.type,
-      MoodBoardId: i.MoodBoardId
+      moodBoardId: i.moodBoardId
     })));
 
     return queryInterface.bulkInsert({tableName: "MoodBoardItems", schema: "capstone_schema"}, moodBoardItems, options);

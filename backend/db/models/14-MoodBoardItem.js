@@ -42,7 +42,7 @@ module.exports = (sequelize) => {
       type: DataTypes.INTEGER,
       defaultValue: 200
     },
-    MoodBoardId: { // Foreign key to MoodBoards table
+    moodBoardId: { // Foreign key to MoodBoards table
         type: DataTypes.INTEGER,
         allowNull: false,
         onUpdate: 'CASCADE',

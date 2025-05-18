@@ -48,7 +48,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         defaultValue: 200
       },
-      MoodBoardId: { // Foreign key to MoodBoards table
+      moodBoardId: { // Foreign key to MoodBoards table
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
