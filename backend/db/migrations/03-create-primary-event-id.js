@@ -27,7 +27,7 @@ module.exports = {
             ALTER TABLE capstone_schema."Users"
             ADD CONSTRAINT fk_users_primary_event
             FOREIGN KEY ("primaryEventId")
-            REFERENCES "Events"("id")
+            REFERENCES capstone_schema."Events"("id")
             ON UPDATE CASCADE
             ON DELETE SET NULL;
           END IF;
