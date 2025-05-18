@@ -12,7 +12,7 @@ module.exports = {
     const now = new Date();
     const Op = Sequelize.Op;
 
-    const transaction = await queryInterface.sequelize.transaction();
+    // const transaction = await queryInterface.sequelize.transaction();
 
     // try {
       // await queryInterface.bulkDelete("Users", {schema:'capstone_schema'}, {
@@ -35,7 +35,7 @@ module.exports = {
       //   }
       // }, { ...options, transaction });
 
-      await queryInterface.bulkInsert('Users', [
+      await queryInterface.bulkInsert('capstone_schema."Users"', [
         {
           name: 'Olivia Martinez',
           email: 'olivia.martinez@example.com',
