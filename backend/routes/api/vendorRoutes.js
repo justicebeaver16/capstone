@@ -29,8 +29,16 @@ router.get('/', requireAuth, async (req, res) => {
     }
 
     const vendors = await Vendor.findAll({
-      where: { EventId: req.user.primaryEventId }
-    });
+  where: { EventId: req.user.primaryEventId },
+  include: [
+    {
+      model: VendorAttachment
+    }
+  ]
+});
+    // const vendors = await Vendor.findAll({
+    //   where: { EventId: req.user.primaryEventId }
+    // });
 
     res.json(vendors);
   } catch (err) {
