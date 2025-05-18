@@ -10,7 +10,7 @@ module.exports = {
   async up(queryInterface, Sequelize) {
 
 const [users] = await queryInterface.sequelize.query(
-  `SELECT id, email FROM "Users" ORDER BY id ASC;`
+  `SELECT id, email FROM capstone_schema."Users" ORDER BY id ASC;`
 );
 const userMap = users.reduce((acc, user) => {
       acc[user.email] = user.id;
@@ -103,7 +103,7 @@ const userMap = users.reduce((acc, user) => {
       updatedAt: now
     }));
 
-    await queryInterface.bulkInsert('Events', eventsToInsert, options);
+    await queryInterface.bulkInsert({tableName:"Events", schema:'capstone_schema'}, eventsToInsert, options);
   },
 
   async down(queryInterface, Sequelize) {
