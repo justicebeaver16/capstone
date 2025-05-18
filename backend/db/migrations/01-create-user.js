@@ -80,16 +80,21 @@ module.exports = {
         comment: 'Reference to vendor table if user is associated with vendor'
       },
       primaryEventId: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        comment: 'Primary event this user is associated with',
-        references: {
-          model: 'Events',
-          key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
-      },
+  type: DataTypes.INTEGER,
+  allowNull: true,
+  comment: 'Primary event this user is associated with (FK added later)'
+},
+      // primaryEventId: {
+      //   type: DataTypes.INTEGER,
+      //   allowNull: true,
+      //   comment: 'Primary event this user is associated with',
+      //   references: {
+      //     model: 'Events',
+      //     key: 'id'
+      //   },
+      //   onUpdate: 'CASCADE',
+      //   onDelete: 'SET NULL'
+      // },
       resetPasswordToken: {
         type: DataTypes.STRING
       },
