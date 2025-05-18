@@ -9,14 +9,14 @@ module.exports = {
     // console.log('Before describe');
     const table = await queryInterface.describeTable("Users", {schema:'capstone_schema'});
 // console.log('After describe');
-console.log('Before if');
+// console.log('Before if');
     if (!('primaryEventId' in table)) {
       await queryInterface.addColumn('capstone_schema.Users', 'primaryEventId', {
         type: Sequelize.INTEGER,
         allowNull: true,
       });
     }
-console.log('After if');
+// console.log('After if');
     if (queryInterface.sequelize.getDialect() === 'postgres') {
       await queryInterface.sequelize.query(`
         DO $$
@@ -24,7 +24,7 @@ console.log('After if');
           IF NOT EXISTS (
             SELECT 1 FROM pg_constraint WHERE conname = 'fk_users_primary_event'
           ) THEN
-            ALTER TABLE "capstone_schema.Users"
+            ALTER TABLE "Users"
             ADD CONSTRAINT fk_users_primary_event
             FOREIGN KEY ("primaryEventId")
             REFERENCES "Events"("id")
