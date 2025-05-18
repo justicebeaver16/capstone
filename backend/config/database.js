@@ -9,7 +9,8 @@ module.exports = {
   },
   test: {
     dialect: 'sqlite',
-    storage: './db/test.sqlite',
+    // storage: './db/test.sqlite',
+    storage: process.env.DB_FILE || './db/development.sqlite',
     seederStorage: 'sequelize',
     logging: false
   },
@@ -24,7 +25,10 @@ module.exports = {
       }
     },
     define: {
-      schema: process.env.SCHEMA || 'public'
-    }
+  schema: process.env.SCHEMA && process.env.SCHEMA.trim() !== '' ? process.env.SCHEMA : 'public'
+}
+    // define: {
+    //   schema: process.env.SCHEMA || 'public'
+    // }
   }
 };
