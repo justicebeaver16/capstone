@@ -29,7 +29,7 @@ router.get('/', requireAuth, async (req, res) => {
 
     const guests = await Guest.findAll({
       where: {
-        eventId: primaryEventId,
+        EventId: primaryEventId,
         userId: req.user.id
       }
     });
@@ -53,9 +53,9 @@ router.post('/', requireAuth, validateGuest, async (req, res) => {
 
     const newGuest = await Guest.create({
       userId: req.user.id,
-      eventId: primaryEventId,
-      name,
-      email,
+      EventId: primaryEventId,
+      primaryName: name,
+      primaryEmail: email,
       rsvpStatus,
       dietaryRestrictions,
       notes
