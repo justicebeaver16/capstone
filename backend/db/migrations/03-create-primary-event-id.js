@@ -2,7 +2,11 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    const table = await queryInterface.describeTable('Users');
+    let options = {};
+    if (process.env.NODE_ENV === 'production') {
+      options.schema = process.env.SCHEMA;
+    }
+    const table = await queryInterface.describeTable(`${options}.Users`);
 
     if (!('primaryEventId' in table)) {
       await queryInterface.addColumn('Users', 'primaryEventId', {
@@ -32,6 +36,10 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
+    let options = {};
+    if (process.env.NODE_ENV === 'production') {
+      options.schema = process.env.SCHEMA;
+    }
     if (queryInterface.sequelize.getDialect() === 'postgres') {
       await queryInterface.sequelize.query(`
         ALTER TABLE "Users"
