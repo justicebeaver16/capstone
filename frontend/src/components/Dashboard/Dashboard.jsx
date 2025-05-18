@@ -95,12 +95,21 @@ const Dashboard = () => {
             <section className="dashboard-section">
               <h3>Guest List</h3>
               {reduxGuests && reduxGuests.length > 0 ? (
+  <ul>
+    {reduxGuests.map((guest) => (
+      <li key={guest.id}>{guest.primaryName}</li>
+    ))}
+  </ul>
+) : (
+  <p>No guests yet.</p>
+)}
+              {/* {reduxGuests && reduxGuests.length > 0 ? (
                 <ul>
                   {reduxGuests.map((guest, index) => (
                     <li key={index}>{typeof guest === 'string' ? guest : guest.name}</li>
                   ))}
                 </ul>
-              ) : <p>No guests yet.</p>}
+              ) : <p>No guests yet.</p>} */}
               <button className="dashboard-link-button" onClick={() => navigate('/guest-list')}>
                 Add Guests
               </button>
@@ -150,9 +159,9 @@ const Dashboard = () => {
               onSubmit={async (updatedData) => {
                 try {
                   const csrfToken = document.cookie
-                    .split('; ')
-                    .find(row => row.startsWith('XSRF-TOKEN='))
-                    ?.split('=')[1];
+  .split('; ')
+  .find(row => row.startsWith('XSRF-TOKEN='))
+  ?.split('=')[1] ?? '';
 
                   const res = await fetch(`/api/events/${activeEvent.id}`, {
                     method: 'PUT',

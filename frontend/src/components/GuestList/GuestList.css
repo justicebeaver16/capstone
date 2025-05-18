@@ -64,3 +64,116 @@
   padding: 0.6rem 1rem;
   border-bottom: 1px solid #ddd;
 }
+
+/* add new guest form */
+.add-guest-form {
+  background-color: #f0fdf4;
+  border: 1px solid #cce5cc;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1rem auto;
+  max-width: 600px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.add-guest-form h2 {
+  margin-bottom: 1rem;
+}
+.add-guest-form-inline {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+  align-items: flex-start;
+}
+
+.add-guest-form-inline input,
+.add-guest-form-inline select {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  min-width: 200px;
+}
+
+.add-guest-form-inline button {
+  background-color: #4caf50;
+  color: white;
+  padding: 0.5rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.error-text {
+  color: red;
+  font-size: 0.85rem;
+  margin-top: -0.5rem;
+  width: 100%;
+}
+.success-message {
+  color: green;
+  margin-top: 1rem;
+  font-weight: bold;
+}
+.guest-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.guest-form-grid label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+}
+
+.guest-form-grid input,
+.guest-form-grid select,
+.guest-form-grid textarea {
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.guest-form-grid textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.full-width {
+  grid-column: span 2;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.modal-actions button {
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-actions button[type="submit"] {
+  background-color: #4caf50;
+  color: white;
+}
+
+.modal-actions button[type="button"] {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.error-message {
+  color: red;
+  margin-top: 0.5rem;
+}
+
+.success-message {
+  color: green;
+  margin-top: 0.5rem;
+}

@@ -5,19 +5,12 @@ import { csrfFetch } from '../csrf';
 export const fetchGuests = createAsyncThunk(
   'guests/fetchGuests',
   async () => {
-    const response = await fetch('/api/guestlist');
+    const response = await csrfFetch('/api/guestlist');
     if (!response.ok) throw new Error('Failed to fetch guests');
-    return await response.json();
+    const guests = await response.json(); // returns array of guests
+    return guests;
   }
 );
-// export const fetchGuests = createAsyncThunk(
-//   'guests/fetchGuests',
-//   async (_, thunkAPI) => {
-//     const response = await csrfFetch('/api/guestlist');
-//     if (!response.ok) throw new Error('Failed to fetch guests');
-//     return await response.json(); // returns array of guests
-//   }
-// );
 
 // Thunk: Add new guest to backend
 export const createGuest = createAsyncThunk(
@@ -28,22 +21,13 @@ export const createGuest = createAsyncThunk(
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(guestData)
     });
-    return await response.json();
+    if (!response.ok) throw new Error('Failed to add guest');
+    const newGuest = await response.json(); // returns new guest object
+    return newGuest;
   }
 );
-// export const createGuest = createAsyncThunk(
-//   'guests/createGuest',
-//   async (guestData, thunkAPI) => {
-//     const response = await csrfFetch('/api/guestlist', {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify(guestData)
-//     });
-//     if (!response.ok) throw new Error('Failed to add guest');
-//     return await response.json(); // new guest object
-//   }
-// );
 
+// Slice
 const guestsSlice = createSlice({
   name: 'guests',
   initialState: [],
@@ -62,6 +46,73 @@ const guestsSlice = createSlice({
 export const { setGuests } = guestsSlice.actions;
 export const selectAllGuests = (state) => state.guests;
 export default guestsSlice.reducer;
+
+// import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+// import { csrfFetch } from '../csrf';
+
+// // Thunk: Fetch guests for current user's primary event
+// export const fetchGuests = createAsyncThunk(
+//   'guests/fetchGuests',
+//   async () => {
+//     const response = await fetch('/api/guestlist');
+//     if (!response.ok) throw new Error('Failed to fetch guests');
+//     return await response.json();
+//   }
+// );
+// // export const fetchGuests = createAsyncThunk(
+// //   'guests/fetchGuests',
+// //   async (_, thunkAPI) => {
+// //     const response = await csrfFetch('/api/guestlist');
+// //     if (!response.ok) throw new Error('Failed to fetch guests');
+// //     return await response.json(); // returns array of guests
+// //   }
+// // );
+
+// // Thunk: Add new guest to backend
+// export const createGuest = createAsyncThunk(
+//   'guests/createGuest',
+//   async (guestData) => {
+//     const response = await csrfFetch('/api/guestlist', {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify(guestData)
+//     });
+//     return await response.json();
+//   }
+// );
+// // export const createGuest = createAsyncThunk(
+// //   'guests/createGuest',
+// //   async (guestData, thunkAPI) => {
+// //     const response = await csrfFetch('/api/guestlist', {
+// //       method: 'POST',
+// //       headers: { 'Content-Type': 'application/json' },
+// //       body: JSON.stringify(guestData)
+// //     });
+// //     if (!response.ok) throw new Error('Failed to add guest');
+// //     return await response.json(); // new guest object
+// //   }
+// // );
+
+// const guestsSlice = createSlice({
+//   name: 'guests',
+//   initialState: [],
+//   reducers: {
+//     setGuests: (state, action) => action.payload
+//   },
+//   extraReducers: (builder) => {
+//     builder
+//       .addCase(fetchGuests.fulfilled, (_, action) => action.payload)
+//       .addCase(createGuest.fulfilled, (state, action) => {
+//         state.push(action.payload);
+//       });
+//   }
+// });
+
+// export const { setGuests } = guestsSlice.actions;
+// export const selectAllGuests = (state) => state.guests;
+// export default guestsSlice.reducer;
+
+
 
 // import { createSlice } from '@reduxjs/toolkit';
 
