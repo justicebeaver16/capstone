@@ -12,13 +12,19 @@ export default defineConfig(({ mode }) => ({
   ],
   server: {
     proxy: {
-      '/api': 'http://localhost:8000' // Local dev
+      '/api': 'http://localhost:8000'
     },
     historyApiFallback: true,
   },
   base: './',
+  optimizeDeps: {
+    include: ['@reduxjs/toolkit']
+  },
   build: {
     outDir: 'dist',
-    emptyOutDir: true, // Clean before build
+    emptyOutDir: true,
+    rollupOptions: {
+      external: [] // Ensure nothing like toolkit is excluded from the bundle
+    }
   }
 }));
