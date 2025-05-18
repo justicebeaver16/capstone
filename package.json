@@ -1,4 +1,4 @@
- {
+{
   "name": "its-happening",
   "version": "1.0.0",
   "description": "It's Happening: An Event Planning App",
@@ -9,11 +9,11 @@
     "sequelize-cli": "npm run --prefix backend sequelize-cli",
     "ensure-schema": "node backend/psql-setup-script.js",
     "backend-setup": "npm run --prefix backend migrate-and-seed",
-    "build": "npm run --prefix frontend build",
     "start": "npm run --prefix backend start:production"
   },
   "dependencies": {
     "node-cache": "^5.1.2",
+    "psql": "^0.0.1",
     "react-toastify": "^11.0.5"
   }
 }
