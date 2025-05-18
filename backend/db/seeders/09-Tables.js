@@ -48,7 +48,7 @@ module.exports = {
       }
     ];
 
-    return queryInterface.bulkInsert('Tables', tables, options);
+    return queryInterface.bulkInsert({tableName: "Tables", schema: "capstone_schema"}, tables, options);
   },
 
   async down(queryInterface, Sequelize) {

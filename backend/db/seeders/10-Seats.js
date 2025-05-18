@@ -11,12 +11,12 @@ module.exports = {
 
     // Fetch Tables and Guests
     const Tables = await queryInterface.sequelize.query(
-      `SELECT id, name FROM "Tables"`,
+      `SELECT id, name FROM capstone_schema."Tables"`,
       { type: Sequelize.QueryTypes.SELECT }
     );
 
     const Guests = await queryInterface.sequelize.query(
-      `SELECT id, "primaryName" FROM "Guests"`,
+      `SELECT id, "primaryName" FROM capstone_schema."Guests"`,
       { type: Sequelize.QueryTypes.SELECT }
     );
 
@@ -88,7 +88,7 @@ module.exports = {
       }
     ].filter(seat => seat.tableId); // Only insert if linked to a valid table
 
-    return queryInterface.bulkInsert('Seats', seats, options);
+    return queryInterface.bulkInsert({tableName: "Seats", schema: "capstone_schema"}, seats, options);
   },
 
   async down(queryInterface, Sequelize) {

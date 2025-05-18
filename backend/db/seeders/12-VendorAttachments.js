@@ -11,7 +11,7 @@ module.exports = {
 
     // Fetch Vendor IDs by name
     const Vendors = await queryInterface.sequelize.query(
-      `SELECT id, name FROM "Vendors"`,
+      `SELECT id, name FROM capstone_schema."Vendors"`,
       { type: Sequelize.QueryTypes.SELECT }
     );
 
@@ -60,7 +60,7 @@ module.exports = {
       vendorId: a.vendorId
     })));
 
-    return queryInterface.bulkInsert('VendorAttachments', attachments, options);
+    return queryInterface.bulkInsert({tableName: "VendorAttachments", schema: "capstone_schema"}, attachments, options);
   },
 
   async down(queryInterface, Sequelize) {

@@ -10,7 +10,7 @@ module.exports = {
     const now = new Date();
 
     const guests = await queryInterface.sequelize.query(
-      `SELECT id, "primaryName" FROM "Guests"`,
+      `SELECT id, "primaryName" FROM capstone_schema."Guests"`,
       { type: Sequelize.QueryTypes.SELECT }
     );
 
@@ -47,7 +47,7 @@ module.exports = {
 
     console.log('Resolved OtherGuests:', otherGuests);
 
-    return queryInterface.bulkInsert('OtherGuests', otherGuests, options);
+    return queryInterface.bulkInsert({tableName: "OtherGuests", schema: "capstone_schema"}, otherGuests, options);
   },
 
   async down(queryInterface, Sequelize) {
