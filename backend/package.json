@@ -2,23 +2,15 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {
+"scripts": {
   "dev": "nodemon app.js",
-  "test": "echo \"Error: no test specified\" && exit 1",
-  "sequelize": "sequelize",
-  "sequelize-cli": "sequelize-cli",
   "start": "node bin/www",
   "start:development": "nodemon bin/www",
   "start:production": "node bin/www",
-  "build": "node psql-setup-script.js",
-
-  "migrate": "npx sequelize-cli db:migrate --seeders-path db/seeders",
-  "migrate:undo": "npx sequelize-cli db:migrate:undo:all --seeders-path db/seeders",
-  "seed": "npx sequelize-cli db:seed:all --seeders-path db/seeders",
-  "seed:undo": "npx sequelize-cli db:seed:undo:all --seeders-path db/seeders",
-  "reset": "npm run migrate:undo && npm run migrate && npm run seed",
-
-  "build:render": "npm run reset"
+  "migrate": "npx sequelize-cli db:migrate --config config/database.js --migrations-path db/migrations",
+  "migrate:undo": "npx sequelize-cli db:migrate:undo:all --config config/database.js --migrations-path db/migrations",
+  "seed": "npx sequelize-cli db:seed:all --config config/database.js --seeders-path db/seeders",
+  "build:render": "npm run migrate:undo && npm run migrate && npm run seed"
 },
   "engines": {
   "node": "18.x"
