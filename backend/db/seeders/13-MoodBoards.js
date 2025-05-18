@@ -10,7 +10,7 @@ module.exports = {
     const now = new Date();
 
     const Events = await queryInterface.sequelize.query(
-      `SELECT id, title FROM "Events"`,
+      `SELECT id, title FROM capstone_schema."Events"`,
       { type: Sequelize.QueryTypes.SELECT }
     );
 
@@ -53,7 +53,7 @@ module.exports = {
 
     console.log('Resolved MoodBoards:', moodboards.map(mb => ({ name: mb.name, eventId: mb.eventId })));
 
-    return queryInterface.bulkInsert('MoodBoards', moodboards, options);
+    return queryInterface.bulkInsert({tableName: "MoodBoards", schema: "capstone_schema"}, moodboards, options);
   },
 
   async down(queryInterface, Sequelize) {

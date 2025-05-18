@@ -12,11 +12,11 @@ module.exports = {
 
     // Fetch Users and Events
     const Users = await queryInterface.sequelize.query(
-      `SELECT id, email FROM ${schema}"Users"`,
+      `SELECT id, email FROM capstone_schema."Users"`,
       { type: Sequelize.QueryTypes.SELECT }
     );
     const Events = await queryInterface.sequelize.query(
-      `SELECT id, title FROM ${schema}"Events"`,
+      `SELECT id, title FROM capstone_schema."Events"`,
       { type: Sequelize.QueryTypes.SELECT }
     );
 
@@ -81,7 +81,7 @@ module.exports = {
       EventId: p.EventId
     })));
 
-    return queryInterface.bulkInsert('Photos', photos, options);
+    return queryInterface.bulkInsert({tableName: "Photos", schema: "capstone_schema"}, photos, options);
   },
 
   async down(queryInterface, Sequelize) {

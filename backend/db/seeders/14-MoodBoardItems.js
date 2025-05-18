@@ -12,7 +12,7 @@ module.exports = {
 
     // Fetch MoodBoards
     const MoodBoards = await queryInterface.sequelize.query(
-      `SELECT id, name FROM ${schema}"MoodBoards"`,
+      `SELECT id, name FROM capstone_schema."MoodBoards"`,
       { type: Sequelize.QueryTypes.SELECT }
     );
 
@@ -82,7 +82,7 @@ module.exports = {
       MoodBoardId: i.MoodBoardId
     })));
 
-    return queryInterface.bulkInsert('MoodBoardItems', moodBoardItems, options);
+    return queryInterface.bulkInsert({tableName: "MoodBoardItems", schema: "capstone_schema"}, moodBoardItems, options);
   },
 
   async down(queryInterface, Sequelize) {
