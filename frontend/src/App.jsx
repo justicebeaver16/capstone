@@ -135,9 +135,9 @@ import Dashboard from './components/Dashboard';
 import Vendors from './components/Vendors';
 import EditVendor from './components/Vendors/EditVendor';
 import GuestList from './components/GuestList';
-import MoodBoard from './components/MoodBoard';
-import Seating from './components/Seating';
-import PhotoAlbum from './components/PhotoAlbum';
+// import MoodBoard from './components/MoodBoard';
+// import Seating from './components/Seating';
+// import PhotoAlbum from './components/PhotoAlbum';
 import Tasks from './components/Tasks';
 import ProtectedRoute from './components/ProtectedRoute';
 import Navigation from './components/Navigation';
@@ -160,7 +160,7 @@ function App() {
 
     dispatch(sessionActions.restoreUser())
       .then(() => setIsLoaded(true))
-      .catch(() => setIsLoaded(true)); // always flip to true so app loads even on 401
+      .catch(() => setIsLoaded(true));
   }, [dispatch]);
 
   const router = createBrowserRouter([
@@ -176,9 +176,9 @@ function App() {
         { path: '/vendors', element: <Vendors /> },
         { path: '/vendors/:vendorId/edit', element: <EditVendor /> },
         { path: '/guest-list', element: <GuestList /> },
-        { path: '/mood-board', element: <MoodBoard /> },
-        { path: '/seating', element: <Seating /> },
-        { path: '/photo-album', element: <PhotoAlbum /> },
+        // { path: '/mood-board', element: <MoodBoard /> },
+        // { path: '/seating', element: <Seating /> },
+        // { path: '/photo-album', element: <PhotoAlbum /> },
         { path: '/tasks', element: <Tasks /> },
       ],
     },
