@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import {
   addTask,
-  deleteTask,
+  // deleteTask,
   selectAllTasks
 } from '../../store/slices/tasksSlice';
 import './Tasks.css';
@@ -30,9 +30,9 @@ const Tasks = () => {
     setTaskSuccess('Task added successfully!');
   };
 
-  const handleDeleteTask = (index) => {
-    dispatch(deleteTask(index));
-  };
+  // const handleDeleteTask = (index) => {
+  //   dispatch(deleteTask(index));
+  // };
 
   if (!sessionUser) return <Navigate to="/login" replace />;
 
@@ -60,7 +60,7 @@ const Tasks = () => {
           {tasks.map((task, index) => (
             <li key={index}>
               {task}
-              <button onClick={() => handleDeleteTask(index)} title="Delete Task">❌</button>
+              {/* <button onClick={() => handleDeleteTask(index)} title="Delete Task">❌</button> */}
             </li>
           ))}
         </ul>
