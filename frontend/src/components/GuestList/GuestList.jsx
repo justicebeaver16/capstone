@@ -1,43 +1,64 @@
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import './GuestList.css';
+import {
+  addGuest,
+  selectAllGuests
+} from '../../store/slices/guestsSlice';
+import './GuestList.css'; // Optional: match style filename to Tasks.css
 
 const GuestList = () => {
-  const sessionUser = useSelector(state => state.session.user);
-  const [guestName, setGuestName] = useState('');
-  const [guests, setGuests] = useState([]);
+  const dispatch = useDispatch();
+  const sessionUser = useSelector((state) => state.session.user);
+  const guests = useSelector(selectAllGuests);
+  const [guestInput, setGuestInput] = useState('');
+  const [guestSuccess, setGuestSuccess] = useState(null);
 
-  if (!sessionUser) {
-    return <Navigate to="/login" replace />;
-  }
+  useEffect(() => {
+    if (guestSuccess) {
+      const timeout = setTimeout(() => setGuestSuccess(null), 2000);
+      return () => clearTimeout(timeout);
+    }
+  }, [guestSuccess]);
 
   const handleAddGuest = () => {
-    if (guestName.trim() === '') return;
-    setGuests(prev => [...prev, guestName.trim()]);
-    setGuestName('');
+    const trimmed = guestInput.trim();
+    if (trimmed === '') return;
+    dispatch(addGuest(trimmed));
+    setGuestInput('');
+    setGuestSuccess('Guest added successfully!');
   };
 
+  if (!sessionUser) return <Navigate to="/login" replace />;
+
   return (
-    <div className="guest-list-container">
-      <h1>Guest List Manager</h1>
-      <p>Add your guests and manage RSVP status here.</p>
-      
+    <div className="guestlist-container">
+      <h1>Guest List</h1>
+      <p>Track who’s invited to your event and manage RSVPs.</p>
+
+      {guestSuccess && (
+        <p className="success-message">{guestSuccess}</p>
+      )}
+
       <div className="add-guest-form">
         <input
           type="text"
           placeholder="Enter guest name"
-          value={guestName}
-          onChange={(e) => setGuestName(e.target.value)}
+          value={guestInput}
+          onChange={(e) => setGuestInput(e.target.value)}
         />
         <button onClick={handleAddGuest}>Add Guest</button>
       </div>
 
-      <ul className="guest-list">
-        {guests.map((guest, index) => (
-          <li key={index}>{guest}</li>
-        ))}
-      </ul>
+      {guests.length > 0 ? (
+        <ul className="guest-list">
+          {guests.map((guest, index) => (
+            <li key={index}>{guest}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>No guests added yet.</p>
+      )}
     </div>
   );
 };

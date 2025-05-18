@@ -107,7 +107,12 @@ const Dashboard = () => {
                   ))}
                 </ul>
               ) : <p>No guests yet.</p>}
-              <a href="/guest-list" className="dashboard-link-button">Edit Guest List</a>
+              <button
+  className="dashboard-link-button"
+  onClick={() => navigate('/guest-list')}
+>
+  Add Guests
+</button>
             </section>
 
             <section className="dashboard-section">
@@ -119,7 +124,12 @@ const Dashboard = () => {
     ))}
   </ul>
 ) : <p>No tasks yet.</p>}
-              <a href="/tasks" className="dashboard-link-button">Add Tasks</a>
+              <button
+  className="dashboard-link-button"
+  onClick={() => navigate('/tasks')}
+>
+  Add Tasks
+</button>
             </section>
 
             <section className="dashboard-section">
