@@ -180,22 +180,42 @@ const Dashboard = () => {
               }}
               onCancel={handleCloseModal}
               onDelete={async () => {
-                try {
-                  const res = await fetch(`/api/events/${activeEvent.id}`, {
-                    method: 'DELETE'
-                  });
+  try {
+    const res = await fetch(`/api/events/${activeEvent.id}`, {
+      method: 'DELETE'
+    });
 
-                  if (res.ok) {
-                    setEvents(events.filter(ev => ev.id !== activeEvent.id));
-                    setMessage('Event successfully deleted.');
-                    handleCloseModal();
-                  } else {
-                    console.error('Failed to delete event.');
-                  }
-                } catch (err) {
-                  console.error('Delete error:', err);
-                }
-              }}
+    const data = await res.json();
+    console.log('DELETE RESPONSE:', data);
+
+    if (res.ok) {
+      setEvents(events.filter(ev => ev.id !== activeEvent.id));
+      setMessage('Event successfully deleted.');
+      handleCloseModal();
+    } else {
+      console.error('Failed to delete event.', data);
+    }
+  } catch (err) {
+    console.error('Delete error:', err);
+  }
+}}
+              // onDelete={async () => {
+              //   try {
+              //     const res = await fetch(`/api/events/${activeEvent.id}`, {
+              //       method: 'DELETE'
+              //     });
+
+              //     if (res.ok) {
+              //       setEvents(events.filter(ev => ev.id !== activeEvent.id));
+              //       setMessage('Event successfully deleted.');
+              //       handleCloseModal();
+              //     } else {
+              //       console.error('Failed to delete event.');
+              //     }
+              //   } catch (err) {
+              //     console.error('Delete error:', err);
+              //   }
+              // }}
             />
           </div>
         </div>
