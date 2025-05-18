@@ -9,14 +9,13 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     const now = new Date();
 
-    // Load Guests to resolve guestId
     const guests = await queryInterface.sequelize.query(
-      `SELECT id, primaryName FROM "Guests"`,
+      `SELECT id, "primaryName" FROM "Guests"`,
       { type: Sequelize.QueryTypes.SELECT }
     );
 
-    const getGuestId = (name) => {
-      const match = guests.find(g => g.primaryName === name);
+    const getGuestId = (primaryName) => {
+      const match = guests.find(g => g.primaryName === primaryName);
       return match ? match.id : null;
     };
 
@@ -39,12 +38,14 @@ module.exports = {
         createdAt: now,
         updatedAt: now
       }
-    ].filter(g => g.guestId); // Remove any that failed guestId lookup
+    ].filter(g => g.guestId);
 
     if (otherGuests.length === 0) {
       console.warn('No OtherGuests to insert. Skipping...');
       return;
     }
+
+    console.log('Resolved OtherGuests:', otherGuests);
 
     return queryInterface.bulkInsert('OtherGuests', otherGuests, options);
   },
