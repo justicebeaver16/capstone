@@ -12,7 +12,7 @@ module.exports = {
       await queryInterface.addColumn('Users', 'primaryEventId', {
         type: Sequelize.INTEGER,
         allowNull: true,
-      });
+      }, options);
     }
 
     if (queryInterface.sequelize.getDialect() === 'postgres') {
