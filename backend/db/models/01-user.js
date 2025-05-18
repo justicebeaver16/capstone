@@ -1,4 +1,3 @@
-// User Model
 const { Model, DataTypes } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -87,8 +86,16 @@ module.exports = (sequelize) => {
     planningPermissions: {
   type: DataTypes.STRING,
   defaultValue: 'none',
-  comment: 'Access level for event planning features (ENUM handled via migration)'
+  comment: 'Access level for event planning features (ENUM handled via migration)',
+  validate: {
+    isIn: [['none', 'view', 'edit', 'full']]
+  }
 },
+//     planningPermissions: {
+//   type: DataTypes.STRING,
+//   defaultValue: 'none',
+//   comment: 'Access level for event planning features (ENUM handled via migration)'
+// },
     isVendor: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
