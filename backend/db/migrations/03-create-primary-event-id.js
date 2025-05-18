@@ -9,13 +9,14 @@ module.exports = {
     // console.log('Before describe');
     const table = await queryInterface.describeTable("Users", {schema:'capstone_schema'});
 // console.log('After describe');
+console.log('Before if');
     if (!('primaryEventId' in table)) {
       await queryInterface.addColumn('capstone_schema.Users', 'primaryEventId', {
         type: Sequelize.INTEGER,
         allowNull: true,
       });
     }
-
+console.log('After if');
     if (queryInterface.sequelize.getDialect() === 'postgres') {
       await queryInterface.sequelize.query(`
         DO $$
