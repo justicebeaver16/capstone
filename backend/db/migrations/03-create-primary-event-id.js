@@ -24,7 +24,7 @@ module.exports = {
           IF NOT EXISTS (
             SELECT 1 FROM pg_constraint WHERE conname = 'fk_users_primary_event'
           ) THEN
-            ALTER TABLE "Users"
+            ALTER TABLE capstone_schema."Users"
             ADD CONSTRAINT fk_users_primary_event
             FOREIGN KEY ("primaryEventId")
             REFERENCES "Events"("id")
