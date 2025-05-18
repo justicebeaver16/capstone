@@ -6,8 +6,9 @@ module.exports = {
     if (process.env.NODE_ENV === 'production') {
       options.schema = process.env.SCHEMA;
     }
+    console.log('Before describe');
     const table = await queryInterface.describeTable("Users", {schema:'capstone_schema'});
-
+console.log('After describe');
     if (!('primaryEventId' in table)) {
       await queryInterface.addColumn('Users', 'primaryEventId', {
         type: Sequelize.INTEGER,
