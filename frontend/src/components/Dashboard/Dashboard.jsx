@@ -1,12 +1,14 @@
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
+import { selectAllTasks } from '../../store/slices/tasksSlice';
 import EditEventFormModal from './EditEventFormModal';
 import CreateEventFormModal from './CreateEventFormModal';
 import './Dashboard.css';
 
 const Dashboard = () => {
   const sessionUser = useSelector((state) => state.session.user);
+  const reduxTasks = useSelector(selectAllTasks);
   const [events, setEvents] = useState([]);
   const [activeEvent, setActiveEvent] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -110,14 +112,14 @@ const Dashboard = () => {
 
             <section className="dashboard-section">
               <h3>Tasks</h3>
-              {event.tasks && event.tasks.length > 0 ? (
-                <ul>
-                  {event.tasks.map(task => (
-                    <li key={task.id}>{task.title}</li>
-                  ))}
-                </ul>
-              ) : <p>No tasks yet.</p>}
-              <a href="/tasks" className="dashboard-link-button">Edit Tasks</a>
+              {reduxTasks && reduxTasks.length > 0 ? (
+  <ul>
+    {reduxTasks.map((task, index) => (
+      <li key={index}>{typeof task === 'string' ? task : task.title}</li>
+    ))}
+  </ul>
+) : <p>No tasks yet.</p>}
+              <a href="/tasks" className="dashboard-link-button">Add Tasks</a>
             </section>
 
             <section className="dashboard-section">
