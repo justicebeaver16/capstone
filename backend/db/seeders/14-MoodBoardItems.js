@@ -9,17 +9,21 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     const now = new Date();
 
+    // Fetch MoodBoards
     const MoodBoards = await queryInterface.sequelize.query(
       `SELECT id, name FROM "MoodBoards"`,
       { type: Sequelize.QueryTypes.SELECT }
     );
 
+    // Helper function
     const getMoodBoardId = (name) => {
       const board = MoodBoards.find(mb => mb.name === name);
+      if (!board) console.warn(`MoodBoard not found: "${name}"`);
       return board ? board.id : null;
     };
 
-    const moodBoardItems = [
+    // Raw mood board items
+    let moodBoardItems = [
       {
         type: 'image',
         content: 'https://example.com/images/floral-arch.jpg',
@@ -62,7 +66,20 @@ module.exports = {
         createdAt: now,
         updatedAt: now
       }
-    ].filter(item => item.MoodBoardId); // Filter out any that are missing FKs
+    ];
+
+    // Filter out invalid entries
+    moodBoardItems = moodBoardItems.filter(item => item.MoodBoardId);
+
+    if (!moodBoardItems.length) {
+      console.warn('No MoodBoardItems to insert. Skipping...');
+      return;
+    }
+
+    console.log('Resolved MoodBoardItems:', moodBoardItems.map(i => ({
+      type: i.type,
+      MoodBoardId: i.MoodBoardId
+    })));
 
     return queryInterface.bulkInsert('MoodBoardItems', moodBoardItems, options);
   },

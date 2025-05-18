@@ -134,11 +134,15 @@ module.exports = {
   `SELECT id, title FROM ${options.schema ? `"${options.schema}".` : ''}"Events";`,
   { type: Sequelize.QueryTypes.SELECT }
 );
-
-    const getEventId = (title) => {
-      const event = events.find(e => e.title === title);
-      return event ? event.id : null;
-    };
+const getEventId = (title) => {
+  const event = events.find(e => e.title === title);
+  if (!event) console.warn(`Event not found: "${title}"`);
+  return event ? event.id : null;
+};
+    // const getEventId = (title) => {
+    //   const event = events.find(e => e.title === title);
+    //   return event ? event.id : null;
+    // };
 
     const vendors = [
       {
