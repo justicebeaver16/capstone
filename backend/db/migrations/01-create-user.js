@@ -41,10 +41,10 @@ module.exports = {
         comment: 'Specific role in the event (e.g., "Mother of the Bride", "Best Man", "Bridesmaid")'
       },
       planningPermissions: {
-        type: DataTypes.ENUM('none', 'view', 'edit', 'full'),
-        defaultValue: 'none',
-        comment: 'Access level for event planning features'
-      },
+  type: Sequelize.STRING,
+  defaultValue: 'none',
+  comment: 'Access level for event planning features'
+},
       isVendor: {
         type: Sequelize.BOOLEAN,
         defaultValue: false
