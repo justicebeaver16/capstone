@@ -10,11 +10,11 @@ module.exports = {
     const now = new Date();
 
     const Events = await queryInterface.sequelize.query(
-      `SELECT id, title FROM "Events"`,
+      `SELECT id, title FROM capstone_schema."Events"`,
       { type: Sequelize.QueryTypes.SELECT }
     );
     const Vendors = await queryInterface.sequelize.query(
-      `SELECT id, name FROM "Vendors"`,
+      `SELECT id, name FROM capstone_schema."Vendors"`,
       { type: Sequelize.QueryTypes.SELECT }
     );
 
@@ -83,7 +83,7 @@ module.exports = {
     });
 
     if (eventParties.length > 0) {
-      await queryInterface.bulkInsert('EventParties', eventParties, options);
+      await queryInterface.bulkInsert({tableName: "EventParties", schema: "capstone_schema"}, eventParties, options);
     } else {
       console.warn('No EventParties inserted due to FK mismatches.');
     }
