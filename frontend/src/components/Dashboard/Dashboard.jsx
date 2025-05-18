@@ -1,8 +1,8 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { selectAllTasks } from '../../store/slices/tasksSlice';
-import { selectAllGuests } from '../../store/slices/guestsSlice';
+import { selectAllGuests, fetchGuests } from '../../store/slices/guestsSlice';
 import EditEventFormModal from './EditEventFormModal';
 import CreateEventFormModal from './CreateEventFormModal';
 import './Dashboard.css';
@@ -17,6 +17,7 @@ const Dashboard = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const canEditEvent = (user) => {
     if (!user) return false;
@@ -29,7 +30,8 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (!sessionUser) return;
-
+    // testing
+      dispatch(fetchGuests());
     const fetchDashboardData = async () => {
       try {
         const res = await fetch('/api/events/current');
@@ -52,7 +54,9 @@ const Dashboard = () => {
     };
 
     fetchDashboardData();
-  }, [sessionUser]);
+    // testing
+    }, [sessionUser, dispatch]);
+  // }, [sessionUser]);
 
   const handleCloseModal = () => {
     setShowEditModal(false);

@@ -18,9 +18,10 @@ function LoginFormModal({ onClose }) {
     setErrors({});
     return dispatch(sessionActions.login(credential, password))
       .then(() => {
+        navigate('/dashboard');
         if (onClose) onClose();
         else closeModal();
-        navigate('/dashboard');
+        // navigate('/dashboard');
       })
       .catch(async (res) => {
         const data = await res.json();
