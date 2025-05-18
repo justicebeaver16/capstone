@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 import { useState } from 'react';
 // import { Navigate, Link } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
-import Navigation from '../Navigation';
+// import Navigation from '../Navigation';
 import SignupFormModal from '../SignupFormModal';
 import LoginFormModal from '../LoginFormModal';
 import './Homepage.css';
@@ -17,7 +17,7 @@ export default function Homepage() {
 
   return (
     <div className="homepage-container">
-      <Navigation isLoaded={true} />
+      {/* <Navigation isLoaded={true} /> */}
 
       <div className="homepage-hero">
         <h1>Welcome to It&apos;s Happening</h1>
