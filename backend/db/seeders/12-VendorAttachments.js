@@ -15,8 +15,11 @@ module.exports = {
       { type: Sequelize.QueryTypes.SELECT }
     );
 
+    console.log('Resolved Vendors:', Vendors);
+
     const getVendorId = (name) => {
       const vendor = Vendors.find(v => v.name === name);
+      if (!vendor) console.warn(`Vendor not found: "${name}"`);
       return vendor ? vendor.id : null;
     };
 
@@ -45,7 +48,17 @@ module.exports = {
         createdAt: now,
         updatedAt: now
       }
-    ].filter(a => a.vendorId); // Ensure vendor exists
+    ].filter(a => a.vendorId); // Only insert if vendorId was resolved
+
+    if (attachments.length === 0) {
+      console.warn('No VendorAttachments to insert. Skipping...');
+      return;
+    }
+
+    console.log('Inserting VendorAttachments:', attachments.map(a => ({
+      name: a.name,
+      vendorId: a.vendorId
+    })));
 
     return queryInterface.bulkInsert('VendorAttachments', attachments, options);
   },

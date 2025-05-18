@@ -10,10 +10,10 @@ module.exports = {
     const now = new Date();
 
     const Events = await queryInterface.sequelize.query(
-      `SELECT id, title FROM "Events"`,
-      { type: Sequelize.QueryTypes.SELECT }
-    );
-
+  `SELECT id, title FROM "Events"`,
+  { type: Sequelize.QueryTypes.SELECT }
+);
+console.log('Events in DB:', Events);
     const getEventId = (title) => {
       const event = Events.find(e => e.title === title);
       if (!event) console.warn(`Event not found: "${title}"`);
