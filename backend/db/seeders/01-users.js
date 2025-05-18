@@ -14,26 +14,26 @@ module.exports = {
 
     const transaction = await queryInterface.sequelize.transaction();
 
-    try {
-      await queryInterface.bulkDelete('Users', {
-        email: {
-          [Op.in]: [
-            'olivia.martinez@example.com',
-            'emily.rivera@example.com',
-            'sophia.kim@example.com',
-            'admin@example.com',
-            'planner@example.com',
-            'maid@example.com',
-            'bestman@example.com',
-            'bridesmaid@example.com',
-            'catering@example.com',
-            'photo@example.com',
-            'user@example.com',
-            'bride@example.com',
-            'groom@example.com'
-          ]
-        }
-      }, { ...options, transaction });
+    // try {
+      // await queryInterface.bulkDelete("Users", {schema:'capstone_schema'}, {
+      //   email: {
+      //     [Op.in]: [
+      //       'olivia.martinez@example.com',
+      //       'emily.rivera@example.com',
+      //       'sophia.kim@example.com',
+      //       'admin@example.com',
+      //       'planner@example.com',
+      //       'maid@example.com',
+      //       'bestman@example.com',
+      //       'bridesmaid@example.com',
+      //       'catering@example.com',
+      //       'photo@example.com',
+      //       'user@example.com',
+      //       'bride@example.com',
+      //       'groom@example.com'
+      //     ]
+      //   }
+      // }, { ...options, transaction });
 
       await queryInterface.bulkInsert('Users', [
         {
@@ -205,13 +205,13 @@ module.exports = {
           createdAt: now,
           updatedAt: now
         }
-      ], { ...options, transaction });
+      ], options);
 
-      await transaction.commit();
-    } catch (err) {
-      await transaction.rollback();
-      throw err;
-    }
+    //   await transaction.commit();
+    // } catch (err) {
+    //   await transaction.rollback();
+    //   throw err;
+    // }
   },
 
   async down(queryInterface, Sequelize) {
