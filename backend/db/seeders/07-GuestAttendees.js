@@ -10,7 +10,7 @@ module.exports = {
     const now = new Date();
 
     const Guests = await queryInterface.sequelize.query(
-  `SELECT id, primaryName FROM Guests`,
+  `SELECT id, "primaryName" FROM "Guests"`,
   { type: Sequelize.QueryTypes.SELECT }
 );
 
