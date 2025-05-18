@@ -8,7 +8,7 @@ module.exports = {
       options.schema = process.env.SCHEMA;
     }
 
-    // Create ENUM type for planningPermissions if using Postgres
+    // Create ENUM type for planningPermissions in Postgres
     if (queryInterface.sequelize.getDialect() === 'postgres') {
       await queryInterface.sequelize.query(`
         DO $$
@@ -46,7 +46,16 @@ module.exports = {
         type: DataTypes.STRING
       },
       role: {
-        type: DataTypes.ENUM('user', 'admin', 'bride', 'groom', 'event_planner', 'planning_team', 'vendor', 'attendee'),
+        type: DataTypes.ENUM(
+          'user',
+          'admin',
+          'bride',
+          'groom',
+          'event_planner',
+          'planning_team',
+          'vendor',
+          'attendee'
+        ),
         defaultValue: 'user'
       },
       eventRole: {
@@ -56,7 +65,7 @@ module.exports = {
       },
       planningPermissions: {
         type: queryInterface.sequelize.getDialect() === 'postgres'
-          ? 'enum_Users_planningPermissions'
+          ? '"enum_Users_planningPermissions"' // Must be quoted and case-matched
           : DataTypes.STRING,
         defaultValue: 'none',
         comment: 'Access level for event planning features'
@@ -108,14 +117,9 @@ module.exports = {
 
     await queryInterface.dropTable('Users', options);
 
-    // Drop ENUM types if using Postgres
     if (queryInterface.sequelize.getDialect() === 'postgres') {
-      await queryInterface.sequelize.query(`
-        DROP TYPE IF EXISTS "enum_Users_planningPermissions";
-      `);
-      await queryInterface.sequelize.query(`
-        DROP TYPE IF EXISTS "enum_Users_role";
-      `);
+      await queryInterface.sequelize.query(`DROP TYPE IF EXISTS "enum_Users_planningPermissions";`);
+      await queryInterface.sequelize.query(`DROP TYPE IF EXISTS "enum_Users_role";`);
     }
   }
 };
