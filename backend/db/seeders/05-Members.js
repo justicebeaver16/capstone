@@ -11,12 +11,12 @@ module.exports = {
 
     // Fetch EventParties and Users
     const EventParties = await queryInterface.sequelize.query(
-      `SELECT id, name FROM "EventParties"`,
+      `SELECT id, name FROM capstone_schema."EventParties"`,
       { type: Sequelize.QueryTypes.SELECT }
     );
 
     const Users = await queryInterface.sequelize.query(
-      `SELECT id, email FROM "Users"`,
+      `SELECT id, email FROM capstone_schema."Users"`,
       { type: Sequelize.QueryTypes.SELECT }
     );
 
@@ -99,7 +99,7 @@ module.exports = {
 
     console.log('Inserting members:', validMembers.map(m => ({ name: m.name, EventPartyId: m.EventPartyId })));
 
-    return queryInterface.bulkInsert('Members', validMembers, options);
+    return queryInterface.bulkInsert({tableName: "Members", schema: "capstone_schema"}, validMembers, options);
   },
 
   async down(queryInterface, Sequelize) {
