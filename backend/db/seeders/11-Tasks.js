@@ -36,8 +36,8 @@ module.exports = {
         dueDate: new Date('2025-06-01'),
         status: 'in-progress',
         notes: 'Waiting on final RSVP list.',
-        memberId: getMemberId('Emily Rivera'),
-        eventId: getEventId('Miller-Johnson Wedding Reception'),
+        MemberId: getMemberId('Emily Rivera'),
+        EventId: getEventId('Miller-Johnson Wedding Reception'),
         createdAt: now,
         updatedAt: now
       },
@@ -47,8 +47,8 @@ module.exports = {
         dueDate: new Date('2025-05-25'),
         status: 'not-started',
         notes: '',
-        memberId: getMemberId('Sophia Kim'),
-        eventId: getEventId('Wilson Corporate Gala'),
+        MemberId: getMemberId('Sophia Kim'),
+        EventId: getEventId('Wilson Corporate Gala'),
         createdAt: now,
         updatedAt: now
       }

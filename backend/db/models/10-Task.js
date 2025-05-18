@@ -25,6 +25,12 @@ module.exports = (sequelize) => {
     notes: {
       type: DataTypes.TEXT
     },
+    MemberId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
     EventId: {
       type: DataTypes.INTEGER,
       references: {
