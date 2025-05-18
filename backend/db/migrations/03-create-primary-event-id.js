@@ -6,7 +6,7 @@ module.exports = {
     if (process.env.NODE_ENV === 'production') {
       options.schema = process.env.SCHEMA;
     }
-    const table = await queryInterface.describeTable('capstone_schema."Users"');
+    const table = await queryInterface.describeTable("Users", {schema:'capstone_schema'});
 
     if (!('primaryEventId' in table)) {
       await queryInterface.addColumn('Users', 'primaryEventId', {
