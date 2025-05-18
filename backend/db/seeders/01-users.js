@@ -35,7 +35,7 @@ module.exports = {
       //   }
       // }, { ...options, transaction });
 
-      await queryInterface.bulkInsert('capstone_schema."Users"', [
+      await queryInterface.bulkInsert({tableName:"Users", schema:'capstone_schema'}, [
         {
           name: 'Olivia Martinez',
           email: 'olivia.martinez@example.com',
