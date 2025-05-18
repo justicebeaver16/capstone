@@ -4,7 +4,6 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     const table = await queryInterface.describeTable('Users');
 
-    // 1. Add the column if it doesn't exist
     if (!('primaryEventId' in table)) {
       await queryInterface.addColumn('Users', 'primaryEventId', {
         type: Sequelize.INTEGER,
@@ -12,7 +11,6 @@ module.exports = {
       });
     }
 
-    // 2. Only add the foreign key constraint if using Postgres
     if (queryInterface.sequelize.getDialect() === 'postgres') {
       await queryInterface.sequelize.query(`
         DO $$
