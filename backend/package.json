@@ -11,9 +11,7 @@
   "init:schema": "node init-schema.js",
   "migrate": "npx sequelize-cli db:migrate",
   "seed": "npx sequelize-cli db:seed:all --seeders-path db/seeders",
-  "reset": "npm run migrate && npm run seed",
-
-  "build:render": "npm run init:schema && npm run reset"
+  "reset": "npm run migrate && npm run seed"
 },
   "engines": {
     "node": "18.x"
