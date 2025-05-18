@@ -13,7 +13,7 @@ module.exports = {
       await queryInterface.addColumn({tableName: 'Users', schema: 'capstone_schema'}, 'primaryEventId', {
         type: Sequelize.INTEGER,
         allowNull: true,
-      }, options);
+      });
     }
 
     if (queryInterface.sequelize.getDialect() === 'postgres') {
