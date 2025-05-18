@@ -8,7 +8,9 @@ class Vendor extends Model {
     Vendor.hasMany(models.EventParty, {
       foreignKey: 'VendorId'
     });
-    Vendor.hasMany(models.VendorAttachment);
+    Vendor.hasMany(models.VendorAttachment, {
+  foreignKey: 'vendorId'
+});
   }
 }
 
