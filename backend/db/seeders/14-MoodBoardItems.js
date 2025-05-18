@@ -4,6 +4,7 @@ let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;
 }
+const schema = options.schema ? `"${options.schema}".` : '';
 
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -11,7 +12,7 @@ module.exports = {
 
     // Fetch MoodBoards
     const MoodBoards = await queryInterface.sequelize.query(
-      `SELECT id, name FROM "MoodBoards"`,
+      `SELECT id, name FROM ${schema}"MoodBoards"`,
       { type: Sequelize.QueryTypes.SELECT }
     );
 

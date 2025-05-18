@@ -4,6 +4,7 @@ let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;
 }
+const schema = options.schema ? `"${options.schema}".` : '';
 
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -11,11 +12,11 @@ module.exports = {
 
     // Fetch Users and Events
     const Users = await queryInterface.sequelize.query(
-      `SELECT id, email FROM "Users"`,
+      `SELECT id, email FROM ${schema}"Users"`,
       { type: Sequelize.QueryTypes.SELECT }
     );
     const Events = await queryInterface.sequelize.query(
-      `SELECT id, title FROM "Events"`,
+      `SELECT id, title FROM ${schema}"Events"`,
       { type: Sequelize.QueryTypes.SELECT }
     );
 

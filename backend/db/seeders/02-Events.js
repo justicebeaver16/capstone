@@ -4,13 +4,15 @@ let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;
 }
+const schema = options.schema ? `"${options.schema}".` : '';
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    const users = await queryInterface.sequelize.query(
-      `SELECT id, email FROM "Users" ORDER BY id ASC;`
-    );
-    const userMap = users[0].reduce((acc, user) => {
+
+const [users] = await queryInterface.sequelize.query(
+  `SELECT id, email FROM "Users" ORDER BY id ASC;`
+);
+const userMap = users.reduce((acc, user) => {
       acc[user.email] = user.id;
       return acc;
     }, {});
