@@ -14,22 +14,16 @@ module.exports = {
 
     // Add foreign key constraint if it doesn't exist (Postgres only)
     if (queryInterface.sequelize.getDialect() === 'postgres') {
-      await queryInterface.sequelize.query(`
-        DO $$
-        BEGIN
-          IF NOT EXISTS (
-            SELECT 1 FROM pg_constraint WHERE conname = 'fk_users_primary_event'
-          ) THEN
-            ALTER TABLE "Users"
-            ADD CONSTRAINT fk_users_primary_event
-            FOREIGN KEY ("primaryEventId")
-            REFERENCES "Events"("id")
-            ON UPDATE CASCADE
-            ON DELETE SET NULL;
-          END IF;
-        END
-        $$;
-      `);
+       await queryInterface.sequelize.query(`
+  UPDATE "Users"
+  SET "primaryEventId" = sub."id"
+  FROM (
+    SELECT DISTINCT ON ("UserId") "id", "UserId"
+    FROM "Events"
+    ORDER BY "UserId", "createdAt"
+  ) AS sub
+  WHERE sub."UserId" = "Users"."id";
+`);
     }
   },
 
