@@ -3,13 +3,16 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     const table = await queryInterface.describeTable('Users');
-    if (!table.primaryEventId) {
+
+    // Add the column only if it doesn't exist
+    if (!('primaryEventId' in table)) {
       await queryInterface.addColumn('Users', 'primaryEventId', {
         type: Sequelize.INTEGER,
-        allowNull: true
+        allowNull: true,
       });
     }
 
+    // Add foreign key constraint if it doesn't exist (Postgres only)
     if (queryInterface.sequelize.getDialect() === 'postgres') {
       await queryInterface.sequelize.query(`
         DO $$
@@ -31,22 +34,27 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    const table = await queryInterface.describeTable('Users');
-
+    // Drop foreign key constraint if it exists (Postgres only)
     if (queryInterface.sequelize.getDialect() === 'postgres') {
-      // Drop constraint if it exists
       await queryInterface.sequelize.query(`
         ALTER TABLE "Users"
         DROP CONSTRAINT IF EXISTS fk_users_primary_event;
       `);
     }
 
-    // Drop column only if it still exists
-    if (table.primaryEventId) {
-      await queryInterface.removeColumn('Users', 'primaryEventId');
+    // Attempt to drop the column safely
+    try {
+      const table = await queryInterface.describeTable('Users');
+
+      if ('primaryEventId' in table) {
+        await queryInterface.removeColumn('Users', 'primaryEventId');
+      }
+    } catch (err) {
+      console.warn('Skipping drop of primaryEventId column — it may not exist:', err.message);
     }
   }
 };
+
 // 'use strict';
 
 // module.exports = {

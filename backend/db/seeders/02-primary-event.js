@@ -77,20 +77,18 @@ module.exports = {
 
     // For each user, update their primaryEventId to the first event they own
     const updates = users.map(user => {
-      const primaryEventId = eventsByUser[user.id]?.[0] || null;
+  const primaryEventId = eventsByUser[user.id]?.[0];
+  if (primaryEventId !== undefined) {
+    return queryInterface.bulkUpdate(
+      options,
+      { primaryEventId },
+      { id: user.id }
+    );
+  }
+  return null; // skip if no event
+});
 
-      if (primaryEventId !== null) {
-        return queryInterface.bulkUpdate(
-          options,
-          { primaryEventId },
-          { id: user.id }
-        );
-      } else {
-        return Promise.resolve(); // No event found, skip update
-      }
-    });
-
-    return Promise.all(updates);
+return Promise.all(updates.filter(Boolean));
   },
 
   async down(queryInterface, Sequelize) {
