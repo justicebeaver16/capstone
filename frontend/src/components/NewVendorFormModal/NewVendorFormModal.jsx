@@ -24,7 +24,8 @@ const NewVendorFormModal = ({ onClose }) => {
     name: '',
     category: '',
     contactEmail: '',
-    contactPhone: ''
+    contactPhone: '',
+     description: ''
   });
   const [errors, setErrors] = useState({});
 
@@ -109,6 +110,16 @@ const NewVendorFormModal = ({ onClose }) => {
               name="contactPhone"
               value={formData.contactPhone}
               onChange={handleChange}
+            />
+          </label>
+           <label>
+            Description:
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              rows={4}
+              placeholder="Add a brief description about the vendor..."
             />
           </label>
 
