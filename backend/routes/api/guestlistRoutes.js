@@ -34,7 +34,8 @@ router.get('/', requireAuth, async (req, res) => {
       }
     });
 
-    res.json(guests);
+    // res.json(guests);
+    res.json({ Guests: guests });
   } catch (err) {
     console.error('Error in GET /api/guestlist:', err);
     res.status(500).json({ error: 'Failed to load guests.' });
