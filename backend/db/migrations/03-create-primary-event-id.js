@@ -10,7 +10,7 @@ module.exports = {
     const table = await queryInterface.describeTable("Users", {schema:'capstone_schema'});
 // console.log('After describe');
     if (!('primaryEventId' in table)) {
-      await queryInterface.addColumn({tableName: 'Users', schema: 'capstone_schema'}, 'primaryEventId', {
+      await queryInterface.addColumn('capstone_schema.Users', 'primaryEventId', {
         type: Sequelize.INTEGER,
         allowNull: true,
       });
@@ -23,7 +23,7 @@ module.exports = {
           IF NOT EXISTS (
             SELECT 1 FROM pg_constraint WHERE conname = 'fk_users_primary_event'
           ) THEN
-            ALTER TABLE "Users"
+            ALTER TABLE "capstone_schema.Users"
             ADD CONSTRAINT fk_users_primary_event
             FOREIGN KEY ("primaryEventId")
             REFERENCES "Events"("id")
