@@ -7,11 +7,7 @@
   "start": "node bin/www",
   "start:development": "nodemon bin/www",
   "start:production": "node bin/www",
-
-  "init:schema": "node init-schema.js",
-  "migrate": "npx sequelize-cli db:migrate",
-  "seed": "npx sequelize-cli db:seed:all --seeders-path db/seeders",
-  "reset": "npm run migrate && npm run seed"
+  "init:schema": "node init-schema.js"
 },
   "engines": {
     "node": "18.x"
