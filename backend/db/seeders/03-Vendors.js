@@ -4,7 +4,6 @@
 // if (process.env.NODE_ENV === 'production') {
 //   options.schema = process.env.SCHEMA;
 // }
-// options.tableName = 'Vendors';
 
 // module.exports = {
 //   async up(queryInterface, Sequelize) {
@@ -16,8 +15,8 @@
 //     );
 
 //     const getEventId = (title) => {
-//       const match = events.find(e => e.title === title);
-//       return match ? match.id : null;
+//       const event = events.find(e => e.title === title);
+//       return event ? event.id : null;
 //     };
 
 //     const vendors = [
@@ -41,7 +40,7 @@
 //         notes: 'Handled multiple weddings for the Johnsons',
 //         status: 'booked',
 //         rating: 5,
-//         tags: ['wedding', 'luxury', 'full-service'],
+//         tags: JSON.stringify(['wedding', 'luxury', 'full-service']),
 //         EventId: getEventId('Miller-Johnson Wedding Ceremony'),
 //         createdAt: now,
 //         updatedAt: now
@@ -66,7 +65,7 @@
 //         notes: 'Includes custom arch and table setups',
 //         status: 'confirmed',
 //         rating: 4,
-//         tags: ['decor', 'floral', 'setup'],
+//         tags: JSON.stringify(['decor', 'floral', 'setup']),
 //         EventId: getEventId('Miller-Johnson Wedding Reception'),
 //         createdAt: now,
 //         updatedAt: now
@@ -91,23 +90,26 @@
 //         notes: 'Vegetarian-friendly menu options',
 //         status: 'paid',
 //         rating: 5,
-//         tags: ['organic', 'sustainable', 'plated'],
+//         tags: JSON.stringify(['organic', 'sustainable', 'plated']),
 //         EventId: getEventId('Wilson Corporate Gala'),
 //         createdAt: now,
 //         updatedAt: now
 //       }
 //     ].filter(v => v.EventId);
 
-//     if (!vendors.length) {
-//       console.warn('No valid EventId matches found. Skipping vendor insertion.');
+//     console.log('Resolved vendors:', vendors.map(v => ({ name: v.name, EventId: v.EventId })));
+
+//     if (vendors.length === 0) {
+//       console.warn('No vendors to insert. Skipping...');
 //       return;
 //     }
 
-//     return queryInterface.bulkInsert(options.tableName, vendors, options);
+//     return queryInterface.bulkInsert('Vendors', vendors, options);
 //   },
 
 //   async down(queryInterface, Sequelize) {
-//     return queryInterface.bulkDelete(options, null, options);
+//     options.tableName = 'Vendors';
+//     return queryInterface.bulkDelete(options, null, {});
 //   }
 // };
 
@@ -117,15 +119,21 @@ let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;
 }
+options.tableName = 'Vendors';
 
 module.exports = {
   async up(queryInterface, Sequelize) {
     const now = new Date();
 
+    // Get all events from the correct schema
+    // const [events] = await queryInterface.sequelize.query(
+    //   `SELECT id, title FROM ${options.schema ? `"${options.schema}".` : ''}"Events";`,
+    //   { type: Sequelize.QueryTypes.SELECT }
+    // );
     const events = await queryInterface.sequelize.query(
-      `SELECT id, title FROM "Events";`,
-      { type: Sequelize.QueryTypes.SELECT }
-    );
+  `SELECT id, title FROM ${options.schema ? `"${options.schema}".` : ''}"Events";`,
+  { type: Sequelize.QueryTypes.SELECT }
+);
 
     const getEventId = (title) => {
       const event = events.find(e => e.title === title);
@@ -212,16 +220,15 @@ module.exports = {
 
     console.log('Resolved vendors:', vendors.map(v => ({ name: v.name, EventId: v.EventId })));
 
-    if (vendors.length === 0) {
-      console.warn('No vendors to insert. Skipping...');
+    if (!vendors.length) {
+      console.warn('No valid vendors to insert. Skipping...');
       return;
     }
 
-    return queryInterface.bulkInsert('Vendors', vendors, options);
+    return queryInterface.bulkInsert(options.tableName, vendors, options);
   },
 
   async down(queryInterface, Sequelize) {
-    options.tableName = 'Vendors';
     return queryInterface.bulkDelete(options, null, {});
   }
 };
