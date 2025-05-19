@@ -20,9 +20,10 @@ const validateTask = [
 // GET /api/tasks — All tasks for current user's primary event
 router.get('/', requireAuth, async (req, res) => {
   try {
-    if (!req.user || !req.user.primaryEventId) {
-      console.warn(`No primaryEventId found for user ${req.user?.email}`);
-      return res.status(400).json({ error: 'User does not have a primary event assigned.' });
+    const event = await Event.findByPk(req.user.primaryEventId);
+
+    if (!event || event.UserId !== req.user.id) {
+      return res.status(403).json({ error: 'You are not authorized to access tasks for this event.' });
     }
 
     const tasks = await Task.findAll({
@@ -35,6 +36,23 @@ router.get('/', requireAuth, async (req, res) => {
     res.status(500).json({ error: 'Failed to load tasks.' });
   }
 });
+// router.get('/', requireAuth, async (req, res) => {
+//   try {
+//     if (!req.user || !req.user.primaryEventId) {
+//       console.warn(`No primaryEventId found for user ${req.user?.email}`);
+//       return res.status(400).json({ error: 'User does not have a primary event assigned.' });
+//     }
+
+//     const tasks = await Task.findAll({
+//       where: { EventId: req.user.primaryEventId }
+//     });
+
+//     res.json(tasks);
+//   } catch (err) {
+//     console.error('Error in GET /api/tasks:', err);
+//     res.status(500).json({ error: 'Failed to load tasks.' });
+//   }
+// });
 
 // POST /api/tasks — Create a new task
 router.post('/', requireAuth, validateTask, async (req, res) => {

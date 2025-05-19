@@ -50,21 +50,34 @@ router.post('/', requireAuth, validateEvent, async (req, res) => {
 // Get current user's events
 router.get('/current', requireAuth, async (req, res) => {
   try {
-    const userId = req.user.id;
-
     const events = await Event.findAll({
-      where: {
-        UserId: userId
-      },
-      order: [['date', 'ASC']]
+      where: { UserId: req.user.id },
+      order: [['createdAt', 'ASC']]
     });
 
     res.json({ Events: events });
   } catch (err) {
-    console.error('Failed to fetch events:', err);
-    res.status(500).json({ message: 'Failed to fetch events', error: err.message });
+    console.error('Failed to fetch user events:', err);
+    res.status(500).json({ message: 'Failed to fetch events' });
   }
 });
+// router.get('/current', requireAuth, async (req, res) => {
+//   try {
+//     const userId = req.user.id;
+
+//     const events = await Event.findAll({
+//       where: {
+//         UserId: userId
+//       },
+//       order: [['date', 'ASC']]
+//     });
+
+//     res.json({ Events: events });
+//   } catch (err) {
+//     console.error('Failed to fetch events:', err);
+//     res.status(500).json({ message: 'Failed to fetch events', error: err.message });
+//   }
+// });
 // router.get('/current', requireAuth, async (req, res) => {
 //   try {
 //     const events = await Event.findAll({
