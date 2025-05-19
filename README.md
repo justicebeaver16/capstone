@@ -4,13 +4,8 @@ It's Happening is a comprehensive event planning application that serves as a on
 
 ✨ Features
 	•	Event Dashboard: Create and manage multiple events with detailed information
-	•	Mood Boards: Collect and organize visual inspiration with a drag-and-drop interface
 	•	Vendor Management: Track and manage vendors with location mapping
-	•	Guest List & RSVPs: Manage invitations, track responses, and collect guest preferences
-	•	Seating Arrangements: Create interactive seating charts with drag-and-drop functionality
-	•	Event Party Management: Assign tasks to event team members and track completion
-	•	Photo Album: Share, like, and comment on event photos
-	•	Song Requests: Collect song requests from guests to dance the night away
+	•	Guest List & RSVPs: Manage invitations and keep a guest list
 	•	Timeline & Scheduling: Keep track of appointments, deadlines, and day-of schedules
 
 🚀 Getting Started
