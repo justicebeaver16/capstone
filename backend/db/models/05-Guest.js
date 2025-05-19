@@ -2,7 +2,7 @@ const { Model, DataTypes } = require('sequelize');
 
 class Guest extends Model {
   static associate(models) {
-    Guest.belongsTo(models.Event);
+    Guest.belongsTo(models.Event, { foreignKey: 'EventId' });
   }
 }
 
@@ -56,6 +56,14 @@ module.exports = (sequelize) => {
     },
     qrCode: {
       type: DataTypes.STRING
+    },
+    EventId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Events',
+        key: 'id'
+      }
     }
   }, {
     sequelize,
